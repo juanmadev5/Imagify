@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun coilImageBuilder(data: String, cacheKey: String): ImageRequest {
     return ImageRequest.Builder(LocalContext.current)
-        .decoderDispatcher(Dispatchers.IO)
         .data(data)
+        .decoderDispatcher(Dispatchers.IO)
         .crossfade(true)
         .crossfade(App.CROSSFADE_VALUE)
         .networkCachePolicy(CachePolicy.ENABLED)

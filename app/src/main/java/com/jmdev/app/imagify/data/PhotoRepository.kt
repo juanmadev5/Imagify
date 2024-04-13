@@ -1,29 +1,30 @@
 package com.jmdev.app.imagify.data
 
 import com.jmdev.app.imagify.api.UnsplashAPI
-import com.jmdev.app.imagify.model.Photo
+import com.jmdev.app.imagify.model.photo.Photo
 import javax.inject.Inject
 
 
 class PhotoRepository @Inject constructor(private val unsplashAPI: UnsplashAPI) {
 
-    suspend fun getPhotos(page: Int, perPage: Int): Result<List<Photo>> {
+    suspend fun getPhotos(page: Int, orderBy: String): Result<List<Photo>> {
         return try {
-            val data = unsplashAPI.getPhotos(page, perPage)
+            val data = unsplashAPI.getPhotos(page = page, orderBy = orderBy)
             Result.success(data)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun getPhoto(imageId: String): Result<Photo> {
+    suspend fun getRandomPhotos(orientation: String): Result<List<Photo>> {
         return try {
-            val data = unsplashAPI.getPhoto(imageId)
+            val data = unsplashAPI.getRandomPhotos(orientation = orientation)
             Result.success(data)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
     suspend fun searchPhotos(query: String, page: Int, perPage: Int): Result<List<Photo>> {
         return try {

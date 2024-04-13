@@ -21,9 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.model.Photo
+import com.jmdev.app.imagify.model.photo.Photo
+import com.jmdev.app.imagify.ui.components.core.AuthorComponent
 
 @Composable
 fun PhotoPrevData(modifier: Modifier = Modifier, data: Photo) {
@@ -31,12 +31,9 @@ fun PhotoPrevData(modifier: Modifier = Modifier, data: Photo) {
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .padding(dimensionResource(id = R.dimen.padding_12))
     ) {
-        Text(
-            text = "${data.user.name} | @${data.user.username}",
-            modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
-            fontWeight = FontWeight.Bold
-        )
+        AuthorComponent(data = data)
         Row(
             modifier = modifier
                 .padding(
@@ -47,10 +44,10 @@ fun PhotoPrevData(modifier: Modifier = Modifier, data: Photo) {
         ) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
-                contentDescription = stringResource(R.string.likes)
+                contentDescription = stringResource(R.string.likes_alt)
             )
             Text(
-                text = stringResource(R.string.likes),
+                text = stringResource(R.string.likes, data.likes ?: "0"),
                 modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_normal))
             )
         }
@@ -71,7 +68,7 @@ fun PhotoPrevData(modifier: Modifier = Modifier, data: Photo) {
                     .background(Color(parsedColor))
             )
             Text(
-                text = data.color,
+                text = data.color ?: "No color",
                 modifier = modifier.padding(start = dimensionResource(id = R.dimen.padding_normal))
             )
         }

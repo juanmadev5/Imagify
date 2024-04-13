@@ -16,12 +16,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        appViewModel.fetchPhotos()
         installSplashScreen().setKeepOnScreenCondition {
             appViewModel.splashScreenState.value
         }
+        appViewModel.fetchPhotos()
         setContent {
-            NavigationController()
+            NavigationController(appViewModel = appViewModel)
         }
     }
 }

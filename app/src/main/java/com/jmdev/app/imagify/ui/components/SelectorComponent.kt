@@ -19,6 +19,7 @@ fun SelectorComponent(
     modifier: Modifier = Modifier,
     item: Int,
     checked: Boolean,
+    enabled: Boolean,
     onCheckedChange: () -> Unit
 ) {
     Row(
@@ -33,7 +34,8 @@ fun SelectorComponent(
     ) {
         Checkbox(
             checked = checked,
-            onCheckedChange = { onCheckedChange() }
+            onCheckedChange = { onCheckedChange() },
+            enabled = enabled
         )
         Text(
             text = stringResource(id = item),

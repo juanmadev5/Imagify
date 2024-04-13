@@ -2,14 +2,16 @@ package com.jmdev.app.imagify.ui.screens
 
 import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -34,47 +36,44 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import coil.compose.SubcomposeAsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.core.State
+import com.jmdev.app.imagify.core.GetPhotosMode
+import com.jmdev.app.imagify.core.PhotoQuality
+import com.jmdev.app.imagify.ui.components.core.AuthorComponent
 import com.jmdev.app.imagify.ui.components.core.coilImageBuilder
+import com.jmdev.app.imagify.ui.navigation.core.LocalNavigationController
 import com.jmdev.app.imagify.ui.viewmodel.AppViewModel
 
 @Composable
 fun ImageDetail(
     modifier: Modifier = Modifier,
-    appViewModel: AppViewModel = viewModel(),
+    appViewModel: AppViewModel,
     context: Context = LocalContext.current,
-    imageId: String
+    navController: NavController = LocalNavigationController.current
 ) {
+    @Suppress("DEPRECATION") val uiController = rememberSystemUiController()
+    uiController.setStatusBarColor(Color(0, 0, 0, 0))
     @Composable
-    fun photoDataList(data: Pair<String, String>) {
-        Text(
-            text = data.first + data.second,
-            modifier = modifier.padding(
-                top = dimensionResource(id = R.dimen.padding_normal),
-                start = dimensionResource(id = R.dimen.padding_large),
-                end = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_normal)
+    fun photoDataList(data: Pair<String, String?>?) {
+        if (data != null) {
+            Text(
+                text = data.first + data.second,
+                modifier = modifier.padding(
+                    top = dimensionResource(id = R.dimen.padding_normal),
+                    start = dimensionResource(id = R.dimen.padding_large),
+                    end = dimensionResource(id = R.dimen.padding_large),
+                    bottom = dimensionResource(id = R.dimen.padding_normal)
+                )
             )
-        )
+        }
     }
 
-    @Composable
-    fun cameraDataList(data: Pair<String, String>) {
-        Text(
-            text = data.first + data.second,
-            modifier = modifier.padding(
-                top = dimensionResource(id = R.dimen.padding_normal),
-                start = dimensionResource(id = R.dimen.padding_large),
-                end = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_normal)
-            )
-        )
-    }
+    val data = appViewModel.photo.collectAsState().value
 
-    val data = appViewModel.getPhoto(imageId)
     val brush = Brush.verticalGradient(
         listOf(
             Color(0, 0, 0, 0),
@@ -83,66 +82,84 @@ fun ImageDetail(
             Color(0, 0, 0, 153)
         )
     )
-    if (appViewModel.getPhotoState.collectAsState().value == State.OK) {
-        val photoDataList = listOf(
-            Pair(
-                stringResource(R.string.author), data!!.user.name
-            ),
-            Pair(
-                stringResource(R.string.created_at), data.createdAt
-            ),
-            Pair(
-                stringResource(R.string.likes_data), "${data.likes}"
-            ),
-            Pair(
-                stringResource(R.string.resolution), "${data.width}x${data.height}"
-            ),
-            Pair(
-                stringResource(R.string.color), data.color
-            )
+    val brushTopBar = Brush.verticalGradient(
+        listOf(
+            Color(0, 0, 0, 153),
+            Color(0, 0, 0, 102),
+            Color(0, 0, 0, 51),
+            Color(0, 0, 0, 0)
         )
-        val cameraDataList = listOf(
-            Pair(
-                stringResource(R.string.make), data.exif.make
-            ),
-            Pair(
-                stringResource(R.string.model), data.exif.model
-            ),
-            Pair(
-                stringResource(R.string.exposure_time), data.exif.exposureTime
-            ),
-            Pair(
-                stringResource(R.string.aperture), data.exif.aperture
-            ),
-            Pair(
-                stringResource(R.string.focal_lenght), data.exif.focalLength
-            ),
-            Pair(
-                stringResource(R.string.iso), "${data.exif.iso}"
-            )
-        )
+    )
+
+    if (data != null) {
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .navigationBarsPadding()
                 .verticalScroll(rememberScrollState())
         ) {
+            val photoDataList = listOf(
+                data.createdAt?.let {
+                    Pair(
+                        stringResource(R.string.created_at), it.dropLast(10)
+                    )
+                },
+                Pair(
+                    stringResource(R.string.likes_data), "${data.likes}"
+                ),
+                Pair(
+                    stringResource(R.string.resolution), "${data.width}x${data.height}"
+                ),
+                Pair(
+                    stringResource(R.string.color), data.color
+                )
+            )
+            val cameraDataList = listOf(
+                Pair(
+                    stringResource(id = R.string.make), "${data.exif?.make}"
+                ),
+                Pair(
+                    stringResource(id = R.string.model), "${data.exif?.model}"
+                ),
+                Pair(
+                    stringResource(id = R.string.exposure_time), "${data.exif?.exposureTime}"
+                ),
+                Pair(
+                    stringResource(id = R.string.aperture), "${data.exif?.aperture}"
+                ),
+                Pair(
+                    stringResource(id = R.string.focal_lenght), "${data.exif?.focalLength}"
+                ),
+                Pair(
+                    stringResource(id = R.string.iso), "${data.exif?.iso}"
+                )
+            )
             Box(
                 modifier = modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = coilImageBuilder(
-                        data = imageId,
-                        cacheKey = imageId
+                        data = appViewModel.getQuality()!!,
+                        cacheKey = data.id
                     ),
-                    contentDescription = imageId,
+                    contentDescription = data.description
+                        ?: stringResource(R.string.no_description),
                     modifier = modifier
                         .fillMaxWidth()
-                        .align(Alignment.Center)
+                        .align(Alignment.Center),
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(dimensionResource(id = R.dimen.home_photocard_default_size))
+                        )
+                    }
                 )
                 IconButton(
-                    onClick = { /*TODO*/ }, modifier = modifier
+                    onClick = { navController.popBackStack() }, modifier = modifier
+                        .statusBarsPadding()
                         .padding(dimensionResource(id = R.dimen.padding_normal))
                         .clip(RoundedCornerShape(dimensionResource(id = R.dimen.img_detail_arrow_back_clip)))
                         .background(MaterialTheme.colorScheme.background)
@@ -154,37 +171,49 @@ fun ImageDetail(
                         contentDescription = stringResource(id = R.string.go_back_)
                     )
                 }
-                Row(
+
+                Box(
                     modifier = modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomStart)
                         .background(brush)
-                        .padding(dimensionResource(id = R.dimen.padding_large)),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(dimensionResource(id = R.dimen.padding_large))
                 ) {
-                    Row(
-                        modifier = modifier.wrapContentSize(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.LocationOn,
-                            contentDescription = stringResource(R.string.location),
-                            tint = Color.White
-                        )
-                        Text(
-                            text = data.location.country,
-                            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
-                            color = Color.White
-                        )
+                    if (data.user?.location != null) {
+                        Row(
+                            modifier = modifier
+                                .wrapContentSize()
+                                .align(Alignment.CenterStart),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.LocationOn,
+                                contentDescription = stringResource(R.string.location),
+                                tint = Color.White
+                            )
+                            Text(
+                                text = data.user.location,
+                                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
+                                color = Color.White
+                            )
+                        }
                     }
-                    IconButton(onClick = {
-                        appViewModel.downloadPhoto(
-                            context,
-                            data.urls.raw,
-                            "${data.id}_${data.description}_${data.user.username}"
-                        )
-                    }) {
+
+                    IconButton(
+                        onClick = {
+                            val quality = when (appViewModel.downloadQuality.value) {
+                                PhotoQuality.RAW -> data.urls.raw
+                                PhotoQuality.FULL -> data.urls.full
+                                PhotoQuality.REGULAR -> data.urls.regular
+                            }
+                            appViewModel.downloadPhoto(
+                                context,
+                                quality,
+                                "${data.user?.username}_${data.user?.name}_${data.createdAt}"
+                            )
+                        },
+                        modifier = modifier.align(Alignment.CenterEnd)
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_download),
                             contentDescription = stringResource(
@@ -194,16 +223,37 @@ fun ImageDetail(
                         )
                     }
                 }
+
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(brush = brushTopBar)
+                ) {}
             }
+            AuthorComponent(
+                modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
+                data = data
+            )
             if (data.description != null) {
                 Text(
                     text = stringResource(R.string.description, data.description),
-                    modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                    modifier = modifier.padding(
+                        start = dimensionResource(id = R.dimen.padding_large),
+                        end = dimensionResource(id = R.dimen.padding_large),
+                        bottom = dimensionResource(id = R.dimen.padding_large),
+                        top = dimensionResource(id = R.dimen.padding_normal)
+                    )
                 )
             } else {
                 Text(
                     text = stringResource(R.string.description_no_available),
-                    modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                    modifier = modifier.padding(
+                        start = dimensionResource(id = R.dimen.padding_large),
+                        end = dimensionResource(id = R.dimen.padding_large),
+                        bottom = dimensionResource(id = R.dimen.padding_large),
+                        top = dimensionResource(id = R.dimen.padding_normal)
+                    )
                 )
             }
             Text(
@@ -214,22 +264,16 @@ fun ImageDetail(
             photoDataList.forEach {
                 photoDataList(data = it)
             }
+            if (appViewModel.getPhotosMode.collectAsState().value == GetPhotosMode.RANDOM) {
             Text(
                 text = stringResource(R.string.camera_data),
                 modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large)),
                 fontWeight = FontWeight.Bold
             )
-            cameraDataList.forEach {
-                cameraDataList(data = it)
+                cameraDataList.forEach {
+                    photoDataList(data = it)
+                }
             }
-        }
-    } else if (appViewModel.getPhotoState.collectAsState().value == State.WAITING) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = stringResource(R.string.loading))
-        }
-    } else {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = stringResource(R.string.error_getting_image))
         }
     }
 }
