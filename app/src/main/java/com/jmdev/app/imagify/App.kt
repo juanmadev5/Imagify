@@ -27,7 +27,6 @@ class App : Application(), ImageLoaderFactory {
         const val ORIENTATION_LANDSCAPE = "landscape"
         const val ORIENTATION_SQUARISH = "squarish"
         const val CROSSFADE_VALUE = 500
-        const val ANIMATION_SPEC = 900
         const val HOME_ANIMATION_SPEC = 900
         const val DS_NAME = "AppDataStore"
         private const val CACHE_DIR = "image_cache"
