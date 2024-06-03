@@ -7,17 +7,23 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -34,13 +41,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jmdev.app.imagify.App
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.core.State
@@ -52,8 +59,6 @@ import com.jmdev.app.imagify.ui.viewmodel.AppViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
-    @Suppress("DEPRECATION") val uiController = rememberSystemUiController()
-    uiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     val navController = LocalNavigationController.current
     val photos = appViewModel.photos.collectAsState().value
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -65,7 +70,6 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
         titleContentColor = MaterialTheme.colorScheme.onSurface
     )
     val currentIndex by appViewModel.currentIndex.collectAsState()
-
 
     if (appViewModel.state.collectAsState().value != State.ERROR) {
         if (photos == null) {
@@ -80,16 +84,23 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
             Scaffold(
                 modifier = modifier
                     .fillMaxSize()
-                    .statusBarsPadding()
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
+                contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.statusBars),
                 topBar = {
                     TopAppBar(
+                        modifier = modifier
+                            .statusBarsPadding()
+                            .padding(
+                                top = dimensionResource(id = R.dimen.padding_normal),
+                                start = dimensionResource(id = R.dimen.padding_12),
+                                end = dimensionResource(id = R.dimen.padding_12)
+                            )
+                            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip))),
                         title = {
                             Row(
                                 modifier = modifier
                                     .fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .padding(dimensionResource(id = R.dimen.padding_12)),
+                                    .wrapContentHeight(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -120,7 +131,7 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Filled.Settings,
+                                            imageVector = Icons.Filled.Menu,
                                             contentDescription = stringResource(id = R.string.settings)
                                         )
                                     }
@@ -139,10 +150,13 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
                 ) {
                     LazyColumn(
                         modifier = modifier
-                            .padding(it)
+                            .statusBarsPadding()
                             .fillMaxSize(),
                         state = rememberLazyListState(initialFirstVisibleItemIndex = currentIndex)
                     ) {
+                        item {
+                            Spacer(modifier = modifier.padding(top = it.calculateTopPadding()))
+                        }
                         items(photos.size) { ph ->
                             PhotoCard(
                                 modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
@@ -155,7 +169,7 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
             }
         }
     } else {
-        Box(modifier = modifier.fillMaxSize()) {
+        Box(modifier = modifier.fillMaxSize().systemBarsPadding()) {
             Text(
                 text = stringResource(R.string.try_again),
                 modifier = modifier

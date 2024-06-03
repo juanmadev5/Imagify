@@ -36,10 +36,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.core.GetPhotosMode
 import com.jmdev.app.imagify.core.PhotoQuality
@@ -55,8 +53,6 @@ fun ImageDetail(
     context: Context = LocalContext.current,
     navController: NavController = LocalNavigationController.current
 ) {
-    @Suppress("DEPRECATION") val uiController = rememberSystemUiController()
-    uiController.setStatusBarColor(Color(0, 0, 0, 0))
     @Composable
     fun photoDataList(data: Pair<String, String?>?) {
         if (data != null) {
@@ -80,14 +76,6 @@ fun ImageDetail(
             Color(0, 0, 0, 51),
             Color(0, 0, 0, 102),
             Color(0, 0, 0, 153)
-        )
-    )
-    val brushTopBar = Brush.verticalGradient(
-        listOf(
-            Color(0, 0, 0, 153),
-            Color(0, 0, 0, 102),
-            Color(0, 0, 0, 51),
-            Color(0, 0, 0, 0)
         )
     )
 
@@ -168,7 +156,8 @@ fun ImageDetail(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.go_back_)
+                        contentDescription = stringResource(id = R.string.go_back_),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -223,13 +212,6 @@ fun ImageDetail(
                         )
                     }
                 }
-
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .background(brush = brushTopBar)
-                ) {}
             }
             AuthorComponent(
                 modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
@@ -265,11 +247,11 @@ fun ImageDetail(
                 photoDataList(data = it)
             }
             if (appViewModel.getPhotosMode.collectAsState().value == GetPhotosMode.RANDOM) {
-            Text(
-                text = stringResource(R.string.camera_data),
-                modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-                fontWeight = FontWeight.Bold
-            )
+                Text(
+                    text = stringResource(R.string.camera_data),
+                    modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                    fontWeight = FontWeight.Bold
+                )
                 cameraDataList.forEach {
                     photoDataList(data = it)
                 }
