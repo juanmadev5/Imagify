@@ -2,6 +2,7 @@ package com.jmdev.app.imagify.ui.screens
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,10 +21,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -36,6 +40,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.jmdev.app.imagify.R
@@ -46,6 +52,7 @@ import com.jmdev.app.imagify.ui.components.core.coilImageBuilder
 import com.jmdev.app.imagify.ui.navigation.core.LocalNavigationController
 import com.jmdev.app.imagify.ui.viewmodel.AppViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageDetail(
     modifier: Modifier = Modifier,
@@ -69,15 +76,6 @@ fun ImageDetail(
     }
 
     val data = appViewModel.photo.collectAsState().value
-
-    val brush = Brush.verticalGradient(
-        listOf(
-            Color(0, 0, 0, 0),
-            Color(0, 0, 0, 51),
-            Color(0, 0, 0, 102),
-            Color(0, 0, 0, 153)
-        )
-    )
 
     if (data != null) {
         Column(
@@ -122,6 +120,57 @@ fun ImageDetail(
                     stringResource(id = R.string.iso), "${data.exif?.iso}"
                 )
             )
+            val topBarColor = TopAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.background,
+                actionIconContentColor = MaterialTheme.colorScheme.primary,
+                navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                titleContentColor = MaterialTheme.colorScheme.onBackground
+            )
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(R.string.photo_detail))
+                },
+                modifier = modifier.statusBarsPadding(),
+                colors = topBarColor,
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }, modifier = modifier
+                            .statusBarsPadding()
+                            .padding(dimensionResource(id = R.dimen.padding_normal))
+                            .size(dimensionResource(id = R.dimen.img_detail_arrow_back_size))
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.go_back_)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            val quality = when (appViewModel.downloadQuality.value) {
+                                PhotoQuality.RAW -> data.urls.raw
+                                PhotoQuality.FULL -> data.urls.full
+                                PhotoQuality.REGULAR -> data.urls.regular
+                            }
+                            appViewModel.downloadPhoto(
+                                context,
+                                quality,
+                                "${data.user?.username}_${data.user?.name}_${data.createdAt}"
+                            )
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_download_photo),
+                            contentDescription = stringResource(
+                                R.string.download
+                            ),
+                            tint = Color.White
+                        )
+                    }
+                }
+            )
             Box(
                 modifier = modifier
                     .fillMaxWidth()
@@ -145,73 +194,6 @@ fun ImageDetail(
                         )
                     }
                 )
-                IconButton(
-                    onClick = { navController.popBackStack() }, modifier = modifier
-                        .statusBarsPadding()
-                        .padding(dimensionResource(id = R.dimen.padding_normal))
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.img_detail_arrow_back_clip)))
-                        .background(MaterialTheme.colorScheme.background)
-                        .align(Alignment.TopStart)
-                        .size(dimensionResource(id = R.dimen.img_detail_arrow_back_size))
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.go_back_),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomStart)
-                        .background(brush)
-                        .padding(dimensionResource(id = R.dimen.padding_large))
-                ) {
-                    if (data.user?.location != null) {
-                        Row(
-                            modifier = modifier
-                                .wrapContentSize()
-                                .align(Alignment.CenterStart),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.LocationOn,
-                                contentDescription = stringResource(R.string.location),
-                                tint = Color.White
-                            )
-                            Text(
-                                text = data.user.location,
-                                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
-                                color = Color.White
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = {
-                            val quality = when (appViewModel.downloadQuality.value) {
-                                PhotoQuality.RAW -> data.urls.raw
-                                PhotoQuality.FULL -> data.urls.full
-                                PhotoQuality.REGULAR -> data.urls.regular
-                            }
-                            appViewModel.downloadPhoto(
-                                context,
-                                quality,
-                                "${data.user?.username}_${data.user?.name}_${data.createdAt}"
-                            )
-                        },
-                        modifier = modifier.align(Alignment.CenterEnd)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_download),
-                            contentDescription = stringResource(
-                                R.string.download
-                            ),
-                            tint = Color.White
-                        )
-                    }
-                }
             }
             AuthorComponent(
                 modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
@@ -220,16 +202,6 @@ fun ImageDetail(
             if (data.description != null) {
                 Text(
                     text = stringResource(R.string.description, data.description),
-                    modifier = modifier.padding(
-                        start = dimensionResource(id = R.dimen.padding_large),
-                        end = dimensionResource(id = R.dimen.padding_large),
-                        bottom = dimensionResource(id = R.dimen.padding_large),
-                        top = dimensionResource(id = R.dimen.padding_normal)
-                    )
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.description_no_available),
                     modifier = modifier.padding(
                         start = dimensionResource(id = R.dimen.padding_large),
                         end = dimensionResource(id = R.dimen.padding_large),

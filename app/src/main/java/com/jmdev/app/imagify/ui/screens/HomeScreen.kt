@@ -150,7 +150,6 @@ fun HomeScreen(modifier: Modifier = Modifier, appViewModel: AppViewModel) {
                 ) {
                     LazyColumn(
                         modifier = modifier
-                            .statusBarsPadding()
                             .fillMaxSize(),
                         state = rememberLazyListState(initialFirstVisibleItemIndex = currentIndex)
                     ) {

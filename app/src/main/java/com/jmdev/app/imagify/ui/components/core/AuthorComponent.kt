@@ -25,49 +25,42 @@ import com.jmdev.app.imagify.model.photo.Photo
 
 @Composable
 fun AuthorComponent(modifier: Modifier = Modifier, data: Photo) {
-    Card(
+    Row(
         modifier = modifier
-            .padding(dimensionResource(id = R.dimen.padding_normal))
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
+            .padding(dimensionResource(id = R.dimen.padding_12)),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SubcomposeAsyncImage(
-                model = data.user?.profileImage?.let {
-                    data.user.username?.let { it1 ->
-                        coilImageBuilder(
-                            data = it.medium,
-                            cacheKey = it1
-                        )
-                    }
-                },
-                contentDescription = data.description,
-                modifier = modifier
-                    .size(dimensionResource(id = R.dimen.user_profile_image_size))
-                    .clip(
-                        RoundedCornerShape(dimensionResource(id = R.dimen.user_profiel_image_cut))
-                    ),
-                loading = {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = stringResource(id = R.string.author)
+        SubcomposeAsyncImage(
+            model = data.user?.profileImage?.let {
+                data.user.username?.let { it1 ->
+                    coilImageBuilder(
+                        data = it.medium,
+                        cacheKey = it1
                     )
-                },
-                success = {
-                    SubcomposeAsyncImageContent()
                 }
-            )
-            Text(
-                text = "${data.user?.name} | @${data.user?.username}",
-                modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
-                fontWeight = FontWeight.Bold
-            )
-        }
+            },
+            contentDescription = data.description,
+            modifier = modifier
+                .size(dimensionResource(id = R.dimen.user_profile_image_size))
+                .clip(
+                    RoundedCornerShape(dimensionResource(id = R.dimen.user_profiel_image_cut))
+                ),
+            loading = {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = stringResource(id = R.string.author)
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            }
+        )
+        Text(
+            text = "${data.user?.name} | @${data.user?.username}",
+            modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
+            fontWeight = FontWeight.Bold
+        )
     }
 }

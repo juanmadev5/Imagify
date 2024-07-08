@@ -21,11 +21,15 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.parseColor("#801b1b1b")))
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                Color.parseColor("#801b1b1b"),
+                Color.parseColor("#801b1b1b")
+            )
+        )
         installSplashScreen().setKeepOnScreenCondition {
             appViewModel.splashScreenState.value
         }
-        appViewModel.fetchPhotos()
         setContent {
             NavigationController(appViewModel = appViewModel)
         }

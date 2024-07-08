@@ -61,6 +61,9 @@ class AppViewModel @Inject constructor(
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex = _currentIndex
 
+    init {
+        fetchPhotos()
+    }
 
     fun fetchPhotos() {
         _state.value = State.WAITING

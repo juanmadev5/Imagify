@@ -11,7 +11,7 @@ class DataManager @Inject constructor() {
     fun downloadPhoto(context: Context, link: String, fileName: String) {
         val request = DownloadManager.Request(Uri.parse(link))
         request.setTitle(fileName)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ".jpeg")
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$fileName.jpeg")
         val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         manager.enqueue(request)
     }
