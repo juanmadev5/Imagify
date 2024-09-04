@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padding6">6dp</dimen>
     <dimen name="padding_normal">8dp</dimen>
     <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="default_clip">16dp</dimen>
     <dimen name="home_photocard_default_size">380dp</dimen>
-
     <dimen name="user_profile_image_size">32dp</dimen>
     <dimen name="user_profiel_image_cut">10dp</dimen>
     <dimen name="color_box_size">16dp</dimen>
     <dimen name="color_box_cut">18dp</dimen>
-    <dimen name="settings_title">24sp</dimen>
+    <dimen name="title">20sp</dimen>
     <dimen name="settings_items_text_size">16sp</dimen>
     <dimen name="img_detail_arrow_back_size">40dp</dimen>
     <dimen name="img_detail_arrow_back_clip">20dp</dimen>
     <dimen name="circular_indicator_size">24dp</dimen>
+    <dimen name="navBarWidth">150dp</dimen>
+    <dimen name="navBarItemSize">40dp</dimen>
 </resources>

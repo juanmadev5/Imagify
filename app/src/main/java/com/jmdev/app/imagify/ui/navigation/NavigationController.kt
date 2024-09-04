@@ -1,60 +1,86 @@
 package com.jmdev.app.imagify.ui.navigation
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jmdev.app.imagify.ui.navigation.core.LocalNavigationController
-import com.jmdev.app.imagify.ui.navigation.core.NavigationRoutes
-import com.jmdev.app.imagify.ui.screens.HomeScreen
-import com.jmdev.app.imagify.ui.screens.ImageDetail
-import com.jmdev.app.imagify.ui.screens.Settings
+import androidx.paging.compose.LazyPagingItems
+import com.jmdev.app.imagify.model.Photo
+import com.jmdev.app.imagify.ui.screens.imagedetail.ImageDetail
+import com.jmdev.app.imagify.ui.screens.mainscreen.MainScreen
+import com.jmdev.app.imagify.ui.screens.settings.Settings
 import com.jmdev.app.imagify.ui.theme.ImagifyTheme
-import com.jmdev.app.imagify.ui.viewmodel.AppViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun NavigationController(appViewModel: AppViewModel) {
+fun NavigationController(
+    permissionRequest: () -> Unit,
+    homePhotos: LazyPagingItems<Photo>,
+) {
     val navController = rememberNavController()
+    val scope = rememberCoroutineScope()
+    val homeLazyState = rememberLazyListState()
+    val searchLazyState = rememberLazyListState()
+    val shouldRefresh = remember { mutableStateOf(false) }
     ImagifyTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CompositionLocalProvider(LocalNavigationController provides navController) {
-                NavHost(
-                    navController = navController,
-                    startDestination = NavigationRoutes.Home.route,
-                    enterTransition = {
-                        scaleIn(spring(Spring.DampingRatioNoBouncy))
-                    },
-                    exitTransition = {
-                        scaleOut(spring(Spring.DampingRatioNoBouncy))
-                    },
-                    popEnterTransition = {
-                        scaleIn(spring(Spring.DampingRatioNoBouncy))
-                    },
-                    popExitTransition = {
-                        scaleOut(spring(Spring.DampingRatioNoBouncy))
-                    }
-                ) {
-                    composable(route = NavigationRoutes.Home.route) {
-                        HomeScreen(appViewModel = appViewModel)
-                    }
-                    composable(route = NavigationRoutes.ImageDetail.route) {
-                        ImageDetail(appViewModel = appViewModel)
-                    }
-                    composable(route = NavigationRoutes.Settings.route) {
-                        Settings(appViewModel = appViewModel)
-                    }
+            NavHost(
+                navController = navController,
+                startDestination = NavigationRoutes.Home.route
+            ) {
+                composable(route = NavigationRoutes.Home.route) {
+                    MainScreen(
+                        navigateToSettings = {
+                            navController.navigate(
+                                NavigationRoutes.Settings.route
+                            ) {
+                                launchSingleTop = true
+                            }
+                        },
+                        navigateToDetail = {
+                            navController.navigate(
+                                NavigationRoutes.ImageDetail.route
+                            ) {
+                                launchSingleTop = true
+                            }
+                        },
+                        homePhotos = homePhotos,
+                        lazyState = homeLazyState,
+                        searchLazyState = searchLazyState,
+                        onRefresh = {
+                            scope.launch {
+                                homeLazyState.animateScrollToItem(0)
+                            }
+                        },
+                        shouldRefresh = shouldRefresh
+                    )
+                }
+                composable(route = NavigationRoutes.ImageDetail.route) {
+                    ImageDetail(
+                        navigateToHome = { navController.popBackStack() },
+                        permissionRequest = { permissionRequest() }
+                    )
+                }
+                composable(route = NavigationRoutes.Settings.route) {
+                    Settings(
+                        navigateToHome = {
+                            navController.popBackStack()
+                        },
+                        shouldRefresh = shouldRefresh,
+                        scope = scope,
+                        searchLazyState = searchLazyState
+                    )
                 }
             }
         }

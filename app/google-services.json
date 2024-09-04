@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "61894044887",
+    "project_id": "imagify-30c0e",
+    "storage_bucket": "imagify-30c0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61894044887:android:b55c45edf847e83ed05492",
+        "android_client_info": {
+          "package_name": "com.jmdev.app.imagify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXoSD3FfjoWeC0IYukiYpb_jlvYSHQkmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
