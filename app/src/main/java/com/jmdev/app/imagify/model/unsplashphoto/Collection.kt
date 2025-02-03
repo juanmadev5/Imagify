@@ -12,5 +12,5 @@ data class Collection(
     @SerializedName("title") val title: String,
     @SerialName("published_at") val publishedAt: String,
     @SerialName("last_collected_at") val lastCollectedAt: String,
-    @SerialName("updated_at") val updatedAt: String
+    @SerialName("updated_at") val updatedAt: String,
 )

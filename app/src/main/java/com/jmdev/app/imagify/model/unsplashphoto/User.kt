@@ -18,5 +18,5 @@ data class User(
     @SerialName("total_likes") val totalLikes: Int,
     @SerialName("total_photos") val totalPhotos: Int,
     @SerialName("total_collections") val totalCollections: Int,
-    @SerializedName("links") val links: UserLinks
+    @SerializedName("links") val links: UserLinks,
 )

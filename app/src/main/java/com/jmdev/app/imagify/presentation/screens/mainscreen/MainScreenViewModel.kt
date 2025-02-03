@@ -13,13 +13,13 @@ import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.model.photo.FeedPhoto
 import com.jmdev.app.imagify.presentation.paging.HomePagingSource
 import com.jmdev.app.imagify.presentation.paging.SearchPagingSource
-import com.jmdev.app.imagify.utils.PhotoQuality
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -42,13 +42,13 @@ class MainScreenViewModel @Inject constructor(
     var photoQuality = MutableStateFlow(App.DEFAULT_PHOTO_QUALITY)
         private set
 
-    var downloadQuality = MutableStateFlow(App.DEFAULT_DOWNLOAD_QUALITY)
-        private set
+    private val _searchPhotoOrientation = MutableStateFlow(App.DEFAULT_PHOTO_ORIENTATION)
 
-    var searchPhotoOrientation = MutableStateFlow(App.DEFAULT_PHOTO_ORIENTATION)
-        private set
+    val searchPhotoOrientation: StateFlow<String> = _searchPhotoOrientation
+        .stateIn(viewModelScope, SharingStarted.Lazily, App.DEFAULT_PHOTO_ORIENTATION)
 
     private val _homeRefreshTrigger = MutableSharedFlow<Unit>(replay = 1)
+    private val _searchRefreshTrigger = MutableSharedFlow<Unit>(replay = 1)
 
     val homePhotos = _homeRefreshTrigger
         .pagerTrigger(Pager(PagingConfig(pageSize = 4)) {
@@ -56,44 +56,34 @@ class MainScreenViewModel @Inject constructor(
                 photoRepository
             )
         })
-        .stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.empty())
+        .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+        .onStart { onLoad() }
 
-    val searchPhotos = searchQuery
-        .flatMapLatest { query ->
-            Pager(PagingConfig(pageSize = 4)) {
-                SearchPagingSource(photoRepository, query)
-            }.flow.cachedIn(viewModelScope)
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.empty())
+    val searchPhotos = combine(searchQuery, _searchRefreshTrigger) { query, _ ->
+        query
+    }.flatMapLatest { query ->
+        Pager(PagingConfig(pageSize = 4)) {
+            SearchPagingSource(photoRepository, query, _searchPhotoOrientation.value)
+        }.flow.cachedIn(viewModelScope)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
-    init {
+    private fun onLoad() {
         viewModelScope.launch {
             userPreferences.onReadDataRequest(
-                getSaveQuality = {
+                getPhotoQuality = {
                     photoQuality.value = it
                 },
-                getDownloadQuality = {
-                    downloadQuality.value = it
-                },
                 getSearchOrientation = {
-                    searchPhotoOrientation.value = it
+                    _searchPhotoOrientation.value = it
                 }
             )
+            _searchRefreshTrigger.emit(Unit)
         }
     }
 
     fun queryPhotos(query: String) {
         searchQuery.value = query
     }
-
-    fun setQuality(quality: PhotoQuality) =
-        updateSetting(quality, photoQuality, userPreferences::saveQuality)
-
-    fun setDownloadQuality(quality: PhotoQuality) =
-        updateSetting(quality, downloadQuality, userPreferences::saveDownloadQuality)
-
-    fun setSearchOrientation(orientation: String) =
-        updateSetting(orientation, searchPhotoOrientation, userPreferences::saveSearchOrientation)
 
     private fun MutableSharedFlow<Unit>.pagerTrigger(pager: Pager<Int, FeedPhoto>) =
         onStart { emit(Unit) }
@@ -104,17 +94,4 @@ class MainScreenViewModel @Inject constructor(
                     )
                 }
             }.stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.empty())
-
-    private fun launchIO(block: suspend () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) { block() }
-    }
-
-    private fun <T> updateSetting(
-        value: T,
-        stateFlow: MutableStateFlow<T>,
-        save: suspend (T) -> Unit,
-    ) {
-        stateFlow.value = value
-        launchIO { save(value) }
-    }
 }

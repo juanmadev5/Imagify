@@ -2,6 +2,7 @@ package com.jmdev.app.imagify.presentation.components
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -14,12 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.photo.FeedPhoto
 import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreenViewModel
-import com.jmdev.app.imagify.presentation.viewmodel.getVM
 import com.jmdev.app.imagify.utils.BlurHashDecoder
 import com.jmdev.app.imagify.utils.PhotoQuality
 import com.jmdev.app.imagify.utils.coilImageBuilder
@@ -27,11 +28,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun ImageComponent(
+fun FeedImageComponent(
     modifier: Modifier = Modifier,
     data: FeedPhoto,
+    navToDetail: (String) -> Unit = {}
 ) {
-    val viewModel: MainScreenViewModel = getVM()
+    val viewModel: MainScreenViewModel = hiltViewModel()
     val quality by viewModel.photoQuality.collectAsStateWithLifecycle()
     val photoUrl = when (quality) {
         PhotoQuality.RAW -> data.urls.raw
@@ -64,7 +66,10 @@ fun ImageComponent(
         modifier = modifier
             .padding(top = dimensionResource(id = R.dimen.padding_normal))
             .aspectRatio(imageRatio)
-            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip))),
+            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
+            .clickable {
+                navToDetail(photoUrl)
+            },
         loading = {
             placeHolderBitmap?.let { bitmap ->
                 Image(
@@ -81,4 +86,3 @@ fun ImageComponent(
         }
     )
 }
-

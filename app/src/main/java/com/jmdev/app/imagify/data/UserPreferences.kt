@@ -14,13 +14,11 @@ import javax.inject.Inject
 class UserPreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
     companion object {
         private const val KEY_QUALITY = "quality"
-        private const val KEY_DOWNLOAD_QUALITY = "download-quality"
         private const val KEY_ORIENTATION = "orientation"
     }
 
     private data class PreferencesData(
         val saveQuality: PhotoQuality,
-        val downloadQuality: PhotoQuality,
         val searchOrientation: String,
     )
 
@@ -35,12 +33,6 @@ class UserPreferences @Inject constructor(private val dataStore: DataStore<Prefe
             PreferencesData(
                 saveQuality = pref[stringPreferencesKey(KEY_QUALITY)]?.let { PhotoQuality.valueOf(it) }
                     ?: PhotoQuality.REGULAR,
-                downloadQuality = pref[stringPreferencesKey(KEY_DOWNLOAD_QUALITY)]?.let {
-                    PhotoQuality.valueOf(
-                        it
-                    )
-                }
-                    ?: PhotoQuality.RAW,
                 searchOrientation = pref[stringPreferencesKey(KEY_ORIENTATION)]
                     ?: App.DEFAULT_PHOTO_ORIENTATION
             )
@@ -51,22 +43,16 @@ class UserPreferences @Inject constructor(private val dataStore: DataStore<Prefe
         savePreference(KEY_QUALITY, quality.toString())
     }
 
-    suspend fun saveDownloadQuality(quality: PhotoQuality) {
-        savePreference(KEY_DOWNLOAD_QUALITY, quality.toString())
-    }
-
     suspend fun saveSearchOrientation(orientation: String) {
         savePreference(KEY_ORIENTATION, orientation)
     }
 
     suspend fun onReadDataRequest(
-        getSaveQuality: (PhotoQuality) -> Unit,
-        getDownloadQuality: (PhotoQuality) -> Unit,
+        getPhotoQuality: (PhotoQuality) -> Unit,
         getSearchOrientation: (String) -> Unit,
     ) {
         getPreferencesData().first().apply {
-            getSaveQuality(saveQuality)
-            getDownloadQuality(downloadQuality)
+            getPhotoQuality(saveQuality)
             getSearchOrientation(searchOrientation)
         }
     }

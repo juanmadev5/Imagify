@@ -8,13 +8,16 @@ import com.jmdev.app.imagify.model.photo.FeedPhoto
 @Composable
 fun PhotoCard(
     feedPhoto: FeedPhoto,
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, String) -> Unit,
 ) {
-    ImageComponent(
+    FeedImageComponent(
         modifier = Modifier
             .clickable {
-                navigateToDetail(feedPhoto.id)
+
             },
-        data = feedPhoto
+        data = feedPhoto,
+        navToDetail = { url ->
+            navigateToDetail(feedPhoto.id, url)
+        }
     )
 }

@@ -16,19 +16,21 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.model.photo.FeedPhoto
 import com.jmdev.app.imagify.presentation.components.PhotoCard
 
 @Composable
 fun Home(
-    homePhotos: LazyPagingItems<FeedPhoto>,
-    navigateToDetail: (String) -> Unit,
+    navigateToDetail: (String, String) -> Unit,
     modifier: Modifier,
-    scaffoldPaddingValues: PaddingValues
+    scaffoldPaddingValues: PaddingValues,
 ) {
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val homePhotos = mainScreenViewModel.homePhotos.collectAsLazyPagingItems()
+
     if (homePhotos.loadState.refresh is LoadState.Loading) {
         Box(modifier = modifier.fillMaxSize()) {
             CircularProgressIndicator(
@@ -49,8 +51,8 @@ fun Home(
                 homePhotos[photo]?.let { it1 ->
                     PhotoCard(
                         feedPhoto = it1
-                    ) { photoId ->
-                        navigateToDetail(photoId)
+                    ) { photoId, url ->
+                        navigateToDetail(photoId, url)
                     }
                 }
             }

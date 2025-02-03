@@ -1,23 +1,28 @@
 package com.jmdev.app.imagify.presentation.screens.imagedetail
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,19 +31,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.SubcomposeAsyncImage
 import com.jmdev.app.imagify.R
+import com.jmdev.app.imagify.presentation.components.DetailImageComponent
 import com.jmdev.app.imagify.presentation.components.ImageDetailTopBar
-import com.jmdev.app.imagify.presentation.viewmodel.getVM
-import com.jmdev.app.imagify.utils.PhotoQuality
-import com.jmdev.app.imagify.utils.coilImageBuilder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +52,7 @@ fun ImageDetail(
     navigateToHome: () -> Unit,
     permissionRequest: () -> Unit,
     photoId: String,
-    photoQuality: String,
+    url: String,
 ) {
 
     @Composable
@@ -68,120 +72,213 @@ fun ImageDetail(
 
     var loading by remember { mutableStateOf(false) }
 
-    val imageDetailViewModel: ImageDetailViewModel = getVM()
-    val q = PhotoQuality.valueOf(photoQuality)
+    val imageDetailViewModel: ImageDetailViewModel = hiltViewModel()
     LaunchedEffect(Unit) {
         loading = true
         imageDetailViewModel.setPermissionGranted()
         imageDetailViewModel.getPhoto(photoId)
-        imageDetailViewModel.getQuality(q)
         loading = false
     }
 
-    val photo by imageDetailViewModel.photo.collectAsStateWithLifecycle()
-    val quality by imageDetailViewModel.photoQuality.collectAsStateWithLifecycle()
+    val photo by imageDetailViewModel.photo.collectAsStateWithLifecycle(null)
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    if(!loading) {
-        if (photo != null) {
-            Scaffold(
-                modifier = modifier
-                    .safeDrawingPadding()
-                    .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
-                    ImageDetailTopBar(
-                        context = context,
-                        navigateToHome = { navigateToHome() },
-                        permissionRequest = { permissionRequest() },
-                        data = photo!!,
-                        scrollBehavior = scrollBehavior
+    if (!loading && photo != null) {
+        Scaffold(
+            modifier = modifier
+                .safeDrawingPadding()
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                ImageDetailTopBar(
+                    context = context,
+                    navigateToHome = { navigateToHome() },
+                    url = photo!!.links.html,
+                    scrollBehavior = scrollBehavior
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    val granted = imageDetailViewModel.isPermissionGranted.value
+                    if (!granted) {
+                        permissionRequest()
+                    } else {
+                        imageDetailViewModel.downloadPhoto(
+                            context,
+                            photo!!.links.download,
+                            "${photo!!.user.username}_${photo!!.user.name}_${photo!!.createdAt}"
+                        )
+                    }
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_download_photo),
+                        contentDescription = stringResource(
+                            R.string.download
+                        ),
                     )
                 }
-            ) { innerPadding ->
-                Column(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    val photoDataList = listOf(
-                        Pair(
-                            stringResource(R.string.created_at), photo?.createdAt?.dropLast(10) ?: ""
-                        ),
-                        Pair(
-                            stringResource(R.string.likes_data), "${photo?.likes ?: ""}"
-                        ),
-                        Pair(
-                            stringResource(R.string.resolution), "${photo?.width ?: ""}x${photo?.height ?: ""}"
-                        ),
-                        Pair(
-                            stringResource(R.string.color), photo?.color  ?: ""
-                        )
-                    )
+            }
+        ) { innerPadding ->
+            val photoDataList = listOf(
+                Pair(
+                    stringResource(R.string.created_at),
+                    photo?.createdAt?.dropLast(10) ?: ""
+                ),
+                Pair(
+                    stringResource(R.string.likes_data), "${photo?.likes ?: ""}"
+                ),
+                Pair(
+                    stringResource(R.string.resolution),
+                    "${photo?.width ?: ""}x${photo?.height ?: ""}"
+                ),
+                Pair(
+                    stringResource(R.string.color), photo?.color ?: ""
+                ),
+                Pair(
+                    "Location: ",
+                    "${photo!!.location?.city ?: "Not available"} | ${photo!!.location?.country ?: ""}"
+                )
+            )
 
-                    val photoUrl = when (quality) {
-                        PhotoQuality.RAW -> photo?.urls?.raw
-                        PhotoQuality.FULL -> photo?.urls?.full
-                        PhotoQuality.REGULAR -> photo?.urls?.regular
-                    }
-                    Box(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
+            val camera = listOf(
+                Pair(
+                    stringResource(R.string.camera_name),
+                    photo!!.exif?.name ?: "Not available"
+                ),
+                Pair(
+                    stringResource(R.string.exposure_time),
+                    photo!!.exif?.exposureTime ?: "Not available"
+                ),
+                Pair(
+                    stringResource(R.string.aperture),
+                    photo!!.exif?.aperture ?: "Not available"
+                ),
+                Pair(
+                    stringResource(R.string.focal_lenght),
+                    photo!!.exif?.focalLength ?: "Not available"
+                ),
+                Pair(
+                    stringResource(R.string.iso),
+                    "${photo!!.exif?.iso ?: "Not available"}"
+                )
+            )
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+
+                item {
+                    DetailImageComponent(
+                        data = photo!!,
+                        url = Uri.decode(url)
+                    )
+                }
+                item {
+                    Row(
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        SubcomposeAsyncImage(
-                            model = coilImageBuilder(
-                                data = photoUrl!!,
-                                cacheKey = photoUrl
-                            ),
-                            contentDescription = photo!!.description
-                                ?: stringResource(R.string.no_description),
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip))),
-                            loading = {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(dimensionResource(id = R.dimen.home_photocard_default_size))
-                                )
-                            }
+                        Icon(Icons.Filled.Person, "", modifier = Modifier.size(20.dp))
+                        Text(
+                            text = stringResource(R.string.author),
+                            modifier = modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
+                }
+
+                item {
                     Text(
-                        text = stringResource(R.string.description),
-                        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = photo!!.description ?: stringResource(R.string.no_description_available),
+                        "${photo!!.user.name} | @${photo!!.user.username}",
                         modifier = modifier.padding(
                             start = dimensionResource(id = R.dimen.padding_large),
                             end = dimensionResource(id = R.dimen.padding_large)
                         )
                     )
-                    Text(
-                        text = stringResource(R.string.photo_data),
-                        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    photoDataList.forEach {
-                        photoDataList(data = it)
+                }
+
+                item {
+                    VerticalDivider()
+                }
+                item {
+                    Row(
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Filled.Info, "", modifier = Modifier.size(20.dp))
+                        Text(
+                            text = stringResource(R.string.description),
+                            modifier = modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
-            }
 
+                item {
+                    Text(
+                        text = photo!!.description
+                            ?: stringResource(R.string.no_description_available),
+                        modifier = modifier.padding(
+                            start = dimensionResource(id = R.dimen.padding_large),
+                            end = dimensionResource(id = R.dimen.padding_large)
+                        )
+                    )
+                }
+
+                item {
+                    VerticalDivider()
+                }
+
+                item {
+                    Row(
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Filled.Image, "", modifier = Modifier.size(20.dp))
+                        Text(
+                            text = stringResource(R.string.photo_data),
+                            modifier = modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                items(photoDataList.size) {
+                    photoDataList(data = photoDataList[it])
+                }
+
+                item {
+                    VerticalDivider()
+                }
+
+                item {
+                    Row(
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Filled.CameraAlt, "", modifier = Modifier.size(20.dp))
+                        Text(
+                            text = stringResource(R.string.camera_data),
+                            modifier = modifier.padding(start = dimensionResource(id = R.dimen.padding_normal)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                items(camera.size) {
+                    photoDataList(data = camera[it])
+                }
+            }
         }
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     }
-
-
 }

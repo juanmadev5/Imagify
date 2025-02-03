@@ -20,7 +20,7 @@ fun SelectorComponent(
     item: Int,
     checked: Boolean,
     enabled: Boolean,
-    onCheckedChange: () -> Unit
+    onCheckedChange: () -> Unit,
 ) {
     Row(
         modifier = modifier

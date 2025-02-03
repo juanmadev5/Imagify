@@ -25,7 +25,7 @@ import com.jmdev.app.imagify.presentation.theme.topBarColors
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     navigateToSettings: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     TopAppBar(
         scrollBehavior = scrollBehavior,

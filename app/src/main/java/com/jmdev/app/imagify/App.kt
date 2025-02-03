@@ -13,7 +13,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class App : Application(), ImageLoaderFactory {
     companion object {
-        const val API_KEY = "vPiErVPq9AkgjFB9SsT1LCZ4F6eEpyHwLZv9Imx35bo"
+        const val UNSPLASH_API_KEY = API_KEY
         const val BASE_URL = "https://api.unsplash.com/"
         const val DEFAULT_QUANTITY = 30
         const val ORIENTATION_PORTRAIT = "portrait"
@@ -21,7 +21,6 @@ class App : Application(), ImageLoaderFactory {
         const val ORIENTATION_SQUARISH = "squarish"
         const val DEFAULT_PHOTO_ORIENTATION = "squarish"
         val DEFAULT_PHOTO_QUALITY = PhotoQuality.REGULAR
-        val DEFAULT_DOWNLOAD_QUALITY = PhotoQuality.RAW
         const val CROSSFADE_VALUE = 500
         const val DS_NAME = "AppDataStore"
         val SEARCH_KEYWORDS = listOf(

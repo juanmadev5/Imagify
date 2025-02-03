@@ -12,22 +12,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.jmdev.app.imagify.R
+import com.jmdev.app.imagify.model.NavItems
 import com.jmdev.app.imagify.presentation.components.HomeTopBar
-import com.jmdev.app.imagify.presentation.components.NavItems
 import com.jmdev.app.imagify.presentation.components.NavigationBar
 import com.jmdev.app.imagify.presentation.components.SearchTextField
-import com.jmdev.app.imagify.presentation.viewmodel.getVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,13 +31,9 @@ fun MainScreen(
     navigateToSettings: () -> Unit,
     navigateToDetail: (String, String) -> Unit,
 ) {
-    val mainScreenViewModel: MainScreenViewModel = getVM()
-    val homePhotos = mainScreenViewModel.homePhotos.collectAsLazyPagingItems()
-    val searchPhotos = mainScreenViewModel.searchPhotos.collectAsLazyPagingItems()
     val searchLazyState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val navBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
-    val scope = rememberCoroutineScope()
     val state = rememberSaveable { mutableStateOf(false) }
     val navIndex = rememberSaveable {
         mutableIntStateOf(0)
@@ -76,7 +67,6 @@ fun MainScreen(
                     state = state,
                     scrollBehavior = scrollBehavior,
                     searchLazyState = searchLazyState,
-                    scope = scope
                 )
             }
         },
@@ -88,13 +78,16 @@ fun MainScreen(
             )
         }
     ) {
-        val quality by mainScreenViewModel.photoQuality.collectAsStateWithLifecycle()
         Crossfade(targetState = navIndex.intValue) { currentScreen ->
             when (currentScreen) {
                 0 -> {
                     Home(
-                        homePhotos = homePhotos,
-                        navigateToDetail = { photoId -> navigateToDetail(photoId, quality.name) },
+                        navigateToDetail = { photoId, url ->
+                            navigateToDetail(
+                                photoId,
+                                url
+                            )
+                        },
                         modifier = modifier,
                         scaffoldPaddingValues = it
                     )
@@ -103,10 +96,13 @@ fun MainScreen(
                 1 -> {
                     Search(
                         scaffoldPaddingValues = it,
-                        navigateToDetail = { photoId -> navigateToDetail(photoId, quality.name) },
-                        searchPhotos = searchPhotos,
+                        navigateToDetail = { photoId, url ->
+                            navigateToDetail(
+                                photoId,
+                                url
+                            )
+                        },
                         searchPhotosLazyState = searchLazyState,
-                        scope = scope,
                         state = state
                     )
                 }

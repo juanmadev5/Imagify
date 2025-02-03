@@ -27,6 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.jmdev.app.imagify.R
+import com.jmdev.app.imagify.model.NavItems
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -36,7 +36,7 @@ object BlurHashDecoder {
         width: Int,
         height: Int,
         punch: Float = 1f,
-        useCache: Boolean = true
+        useCache: Boolean = true,
     ): Bitmap? {
         if (blurHash == null || blurHash.length < 6) {
             return null
@@ -106,7 +106,7 @@ object BlurHashDecoder {
         width: Int, height: Int,
         numCompX: Int, numCompY: Int,
         colors: Array<FloatArray>,
-        useCache: Boolean
+        useCache: Boolean,
     ): Bitmap {
         // use an array for better performance when writing pixel colors
         val imageArray = IntArray(width * height)
@@ -164,7 +164,7 @@ object BlurHashDecoder {
         x: Int,
         numComp: Int,
         y: Int,
-        size: Int
+        size: Int,
     ): Double {
         if (calculate) {
             this[x + numComp * y] = cos(Math.PI * y * x / size)

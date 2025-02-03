@@ -11,5 +11,5 @@ data class Links(
     @SerializedName("self") val self: String,
     @SerializedName("html") val html: String,
     @SerializedName("download") val download: String,
-    @SerialName("download_location") val downloadLocation: String
+    @SerialName("download_location") val downloadLocation: String,
 )

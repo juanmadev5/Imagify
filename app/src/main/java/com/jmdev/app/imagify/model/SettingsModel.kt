@@ -1,5 +1,6 @@
 package com.jmdev.app.imagify.model
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import com.jmdev.app.imagify.utils.PhotoQuality
 
@@ -11,12 +12,6 @@ data class QualityModel(
 
 @Stable
 data class OrientationModel(
-    val orientation: Int,
+    @StringRes val orientation: Int,
     val orientationToApply: String,
-)
-
-@Stable
-data class DownloadQualityModel(
-    val quality: Int,
-    val downloadQuality: PhotoQuality,
 )

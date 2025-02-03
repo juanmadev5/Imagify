@@ -14,5 +14,5 @@ data class Exif(
     @SerialName("exposure_time") val exposureTime: String?,
     @SerializedName("aperture") val aperture: String?,
     @SerialName("focal_length") val focalLength: String?,
-    @SerializedName("iso") val iso: Int?
+    @SerializedName("iso") val iso: Int?,
 )

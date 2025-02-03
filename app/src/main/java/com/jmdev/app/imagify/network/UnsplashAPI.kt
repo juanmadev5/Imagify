@@ -22,6 +22,7 @@ interface UnsplashAPI {
         @Query("query") query: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = App.DEFAULT_QUANTITY,
+        @Query("orientation") orientation: String = App.DEFAULT_PHOTO_ORIENTATION,
     ): Response<SearchPhotosResult>
 
     @GET("/photos/{id}")

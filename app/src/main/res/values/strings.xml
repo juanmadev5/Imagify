@@ -37,7 +37,7 @@
     <string name="retry">Retry</string>
     <string name="photo_detail">Photo detail</string>
     <string name="required_permission">Required permission</string>
-    <string name="requested_permission_desc">This permission is necesary to save images on your device. Please grant the permission on your device Settings.</string>
+    <string name="requested_permission_desc">This permission is necessary to save images on your device. Please grant the permission on your device Settings.</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="cancel">Cancel</string>
     <string name="share_photo">Share photo</string>
@@ -49,5 +49,6 @@
     <string name="no_description_available">No description available</string>
     <string name="views">"Views: "</string>
     <string name="downloads">"Downloads: "</string>
-    <string name="downloading_photo">Downloading photo...</string>
+    <string name="downloading_photo">Downloading photo…</string>
+    <string name="camera_name">"Name: "</string>
 </resources>

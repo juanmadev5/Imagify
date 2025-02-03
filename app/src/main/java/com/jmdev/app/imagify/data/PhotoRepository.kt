@@ -15,8 +15,8 @@ class PhotoRepository @Inject constructor(private val service: UnsplashAPI) {
         return if (response.isSuccessful) response.body() ?: emptyList() else emptyList()
     }
 
-    suspend fun searchPhoto(query: String, page: Int): SearchPhotosResult {
-        val response = service.searchPhotos(query, page)
+    suspend fun searchPhoto(query: String, page: Int, orientation: String): SearchPhotosResult {
+        val response = service.searchPhotos(query = query, page = page, orientation = orientation)
         return response.body() ?: SearchPhotosResult(0, 0, emptyList())
     }
 

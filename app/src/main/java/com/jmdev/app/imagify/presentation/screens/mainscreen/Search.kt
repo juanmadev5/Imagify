@@ -1,5 +1,6 @@
 package com.jmdev.app.imagify.presentation.screens.mainscreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -27,24 +30,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.model.photo.FeedPhoto
 import com.jmdev.app.imagify.presentation.components.PhotoCard
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun Search(
     modifier: Modifier = Modifier,
     scaffoldPaddingValues: PaddingValues,
-    navigateToDetail: (String) -> Unit,
-    searchPhotos: LazyPagingItems<FeedPhoto>,
+    navigateToDetail: (String, String) -> Unit,
     searchPhotosLazyState: LazyListState,
-    scope: CoroutineScope,
     state: MutableState<Boolean>,
 ) {
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val searchPhotos = mainScreenViewModel.searchPhotos.collectAsLazyPagingItems()
+    val orientation = mainScreenViewModel.searchPhotoOrientation.collectAsState()
+    val scope = rememberCoroutineScope()
+
     if (searchPhotos.itemCount == 0) {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -74,8 +79,10 @@ fun Search(
             LaunchedEffect(Unit) {
                 if (state.value) {
                     scope.launch {
+                        state.value = true
                         searchPhotosLazyState.animateScrollToItem(0)
                         state.value = false
+                        Log.d("Orientation", orientation.value)
                     }
                 }
             }
@@ -95,8 +102,8 @@ fun Search(
                     searchPhotos[photo]?.let {
                         PhotoCard(
                             feedPhoto = it
-                        ) { photoId ->
-                            navigateToDetail(photoId)
+                        ) { photoId, url ->
+                            navigateToDetail(photoId, url)
                         }
                     }
                 }

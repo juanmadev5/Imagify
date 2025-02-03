@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 @Stable
 @Serializable
 data class Tag(
-    @SerializedName("title") val title: String
+    @SerializedName("title") val title: String,
 )

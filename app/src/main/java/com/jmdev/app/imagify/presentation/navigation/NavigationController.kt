@@ -1,5 +1,6 @@
 package com.jmdev.app.imagify.presentation.navigation
 
+import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,12 +40,12 @@ fun NavigationController(
                                 launchSingleTop = true
                             }
                         },
-                        navigateToDetail = { photoId, quality ->
+                        navigateToDetail = { photoId, url ->
                             navController.navigate(
                                 NavigationRoutes.ImageDetail.route.replace(
                                     "{id}",
                                     photoId
-                                ).replace("{quality}", quality)
+                                ).replace("{url}", Uri.encode(url))
                             ) {
                                 launchSingleTop = true
                             }
@@ -55,16 +56,16 @@ fun NavigationController(
                     route = NavigationRoutes.ImageDetail.route,
                     arguments = listOf(
                         navArgument("id") { type = NavType.StringType },
-                        navArgument("quality") { type = NavType.StringType }
+                        navArgument("url") { type = NavType.StringType }
                     ),
                 ) {
                     val photoId = it.arguments?.getString("id") ?: ""
-                    val photoQuality = it.arguments?.getString("quality") ?: ""
+                    val url = it.arguments?.getString("url") ?: ""
                     ImageDetail(
                         navigateToHome = { navController.popBackStack() },
                         permissionRequest = { permissionRequest() },
                         photoId = photoId,
-                        photoQuality = photoQuality
+                        url = url
                     )
                 }
                 composable(route = NavigationRoutes.Settings.route) {

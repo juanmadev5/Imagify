@@ -8,6 +8,7 @@ import com.jmdev.app.imagify.model.photo.FeedPhoto
 class SearchPagingSource(
     private val photoRepository: PhotoRepository,
     private val query: String,
+    private val orientation: String
 ) : PagingSource<Int, FeedPhoto>() {
     override fun getRefreshKey(state: PagingState<Int, FeedPhoto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -19,7 +20,7 @@ class SearchPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FeedPhoto> {
         return try {
             val page = params.key ?: 1
-            val response = photoRepository.searchPhoto(query, page)
+            val response = photoRepository.searchPhoto(query, page, orientation)
             LoadResult.Page(
                 data = response.results,
                 prevKey = if (page == 1) null else page - 1,

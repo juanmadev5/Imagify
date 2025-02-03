@@ -7,9 +7,11 @@ import com.jmdev.app.imagify.data.PhotoRepository
 import com.jmdev.app.imagify.model.unsplashphoto.Photo
 import com.jmdev.app.imagify.utils.PermissionManager
 import com.jmdev.app.imagify.utils.PhotoDownloadManager
-import com.jmdev.app.imagify.utils.PhotoQuality
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,20 +24,14 @@ class ImageDetailViewModel @Inject constructor(
 
     val isPermissionGranted = MutableStateFlow(false)
 
-    var photo = MutableStateFlow<Photo?>(null)
-        private set
-
-    var photoQuality = MutableStateFlow(PhotoQuality.REGULAR)
-        private set
+    private val _photo = MutableStateFlow<Photo?>(null)
+    val photo: StateFlow<Photo?> = _photo
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(50), null)
 
     fun getPhoto(id: String) {
         viewModelScope.launch {
-            photo.value = photoRepository.getPhoto(id)
+            _photo.value = photoRepository.getPhoto(id)
         }
-    }
-
-    fun getQuality(quality: PhotoQuality) {
-        photoQuality.value = quality
     }
 
     fun setPermissionGranted() {

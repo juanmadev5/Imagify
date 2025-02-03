@@ -9,5 +9,5 @@ import kotlinx.serialization.Serializable
 data class Location(
     @SerializedName("city") val city: String?,
     @SerializedName("country") val country: String?,
-    @SerializedName("position") val position: Position?
+    @SerializedName("position") val position: Position?,
 )

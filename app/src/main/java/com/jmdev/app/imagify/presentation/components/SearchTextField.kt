@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,12 +25,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.presentation.theme.topBarColors
 import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreenViewModel
-import com.jmdev.app.imagify.presentation.viewmodel.getVM
-import kotlinx.coroutines.CoroutineScope
+import com.jmdev.app.imagify.presentation.theme.topBarColors
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,9 +39,10 @@ fun SearchTextField(
     state: MutableState<Boolean>,
     scrollBehavior: TopAppBarScrollBehavior,
     searchLazyState: LazyListState,
-    scope: CoroutineScope
 ) {
-    val mainScreenViewModel: MainScreenViewModel = getVM()
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val scope = rememberCoroutineScope()
+
     val query = rememberSaveable {
         mutableStateOf(mainScreenViewModel.searchQuery.value)
     }
@@ -56,6 +57,7 @@ fun SearchTextField(
             state.value = true
         }
     }
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     CenterAlignedTopAppBar(
