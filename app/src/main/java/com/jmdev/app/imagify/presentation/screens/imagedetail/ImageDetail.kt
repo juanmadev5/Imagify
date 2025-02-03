@@ -123,7 +123,7 @@ fun ImageDetail(
             val photoDataList = listOf(
                 Pair(
                     stringResource(R.string.created_at),
-                    photo?.createdAt?.dropLast(10) ?: ""
+                    photo?.createdAt?.dropLast(10) ?: "Not available"
                 ),
                 Pair(
                     stringResource(R.string.likes_data), "${photo?.likes ?: ""}"
