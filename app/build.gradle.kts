@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.serialization)
     alias(libs.plugins.compose.compiler)
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-    id("com.google.firebase.crashlytics")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.firebase-perf")
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.perf)
 }
 
 android {
-    val sdk = 34
+    val sdk = 35
     val jVersion = JavaVersion.VERSION_1_8
     namespace = "com.jmdev.app.imagify"
     compileSdk = sdk
@@ -68,15 +69,15 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.coil.compose)
-    implementation (libs.androidx.paging.runtime.ktx)
-    implementation (libs.androidx.paging.compose)
-    implementation (libs.okhttp)
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.okhttp)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
     implementation(libs.kotlinx.serialization.json)
-
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)

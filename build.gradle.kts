@@ -3,9 +3,10 @@ plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.compose.compiler) apply false
-    id("com.google.devtools.ksp") version "2.0.20-1.0.24" apply false
-    id ("com.google.dagger.hilt.android") version "2.52" apply false
-    id("com.google.gms.google-services") version "4.4.2" apply false
-    id("com.google.firebase.crashlytics") version "3.0.2" apply false
-    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
+    alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.kotlin.ksp) apply false
+    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.crashlytics) apply false
+    alias(libs.plugins.firebase.perf) apply false
 }

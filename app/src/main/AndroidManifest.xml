@@ -20,7 +20,7 @@
         tools:targetApi="tiramisu"
         android:enableOnBackInvokedCallback="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Imagify"
             android:screenOrientation="portrait"

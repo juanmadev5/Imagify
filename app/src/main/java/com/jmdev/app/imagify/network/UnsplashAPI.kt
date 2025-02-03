@@ -1,9 +1,12 @@
 package com.jmdev.app.imagify.network
 
 import com.jmdev.app.imagify.App
-import com.jmdev.app.imagify.model.Photo
 import com.jmdev.app.imagify.model.SearchPhotosResult
+import com.jmdev.app.imagify.model.photo.FeedPhoto
+import com.jmdev.app.imagify.model.unsplashphoto.Photo
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UnsplashAPI {
@@ -11,13 +14,18 @@ interface UnsplashAPI {
     @GET("/photos")
     suspend fun getPhotosEditorial(
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int = App.DEFAULT_QUANTITY
-    ): List<Photo>
+        @Query("per_page") perPage: Int = App.DEFAULT_QUANTITY,
+    ): Response<List<FeedPhoto>>
 
     @GET("/search/photos")
     suspend fun searchPhotos(
         @Query("query") query: String,
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int = App.DEFAULT_QUANTITY
-    ): SearchPhotosResult
+        @Query("per_page") perPage: Int = App.DEFAULT_QUANTITY,
+    ): Response<SearchPhotosResult>
+
+    @GET("/photos/{id}")
+    suspend fun getPhoto(
+        @Path("id") id: String,
+    ): Response<Photo>
 }

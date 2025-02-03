@@ -5,14 +5,15 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import com.jmdev.app.imagify.core.PhotoQuality
-import com.jmdev.app.imagify.ui.core.BlurHashDecoder
+import coil.request.CachePolicy
+import coil.util.DebugLogger
+import com.jmdev.app.imagify.utils.PhotoQuality
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App : Application(), ImageLoaderFactory {
     companion object {
-        const val API_KEY = "NA7I03lK7waSfv12CtrLLhrgWJDUH8SXAOMgs5S-uIQ"
+        const val API_KEY = "vPiErVPq9AkgjFB9SsT1LCZ4F6eEpyHwLZv9Imx35bo"
         const val BASE_URL = "https://api.unsplash.com/"
         const val DEFAULT_QUANTITY = 30
         const val ORIENTATION_PORTRAIT = "portrait"
@@ -23,9 +24,6 @@ class App : Application(), ImageLoaderFactory {
         val DEFAULT_DOWNLOAD_QUALITY = PhotoQuality.RAW
         const val CROSSFADE_VALUE = 500
         const val DS_NAME = "AppDataStore"
-        private const val CACHE_DIR = "image_cache"
-        private const val MAX_PERCENT_SIZE = 0.10
-        private const val MAX_SIZE_PER_BYTES: Long = 20 * 1024 * 1024
         val SEARCH_KEYWORDS = listOf(
             "blue sky",
             "landscape",
@@ -51,24 +49,22 @@ class App : Application(), ImageLoaderFactory {
     }
 
     override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
+        return ImageLoader(this).newBuilder()
+            .memoryCachePolicy(CachePolicy.ENABLED)
             .memoryCache {
                 MemoryCache.Builder(this)
-                    .maxSizePercent(MAX_PERCENT_SIZE)
+                    .maxSizePercent(0.1)
+                    .strongReferencesEnabled(true)
                     .build()
             }
+            .diskCachePolicy(CachePolicy.ENABLED)
             .diskCache {
                 DiskCache.Builder()
-                    .directory(cacheDir.resolve(CACHE_DIR))
-                    .maxSizeBytes(MAX_SIZE_PER_BYTES)
+                    .maxSizePercent(0.03)
+                    .directory(cacheDir)
                     .build()
             }
-            .respectCacheHeaders(false)
+            .logger(DebugLogger())
             .build()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        BlurHashDecoder.clearCache()
     }
 }
