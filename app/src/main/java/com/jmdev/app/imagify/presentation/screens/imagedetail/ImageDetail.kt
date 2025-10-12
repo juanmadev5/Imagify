@@ -1,7 +1,6 @@
 package com.jmdev.app.imagify.presentation.screens.imagedetail
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +51,6 @@ fun ImageDetail(
     navigateToHome: () -> Unit,
     permissionRequest: () -> Unit,
     photoId: String,
-    url: String,
 ) {
 
     @Composable
@@ -172,7 +170,7 @@ fun ImageDetail(
                 item {
                     DetailImageComponent(
                         data = photo!!,
-                        url = Uri.decode(url)
+                        url = photo!!.urls.full
                     )
                 }
                 item {
