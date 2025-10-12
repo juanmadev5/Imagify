@@ -11,10 +11,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jmdev.app.imagify.presentation.screens.imagedetail.ImageDetail
-import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreen
-import com.jmdev.app.imagify.presentation.screens.settings.Settings
-import com.jmdev.app.imagify.presentation.screens.settings.SettingsViewModel
+import com.jmdev.app.imagify.presentation.screens.imageDetailScreen.ImageDetail
+import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreen
+import com.jmdev.app.imagify.presentation.screens.settingsScreen.Settings
+import com.jmdev.app.imagify.presentation.screens.settingsScreen.SettingsViewModel
 import com.jmdev.app.imagify.presentation.theme.ImagifyTheme
 
 @Composable

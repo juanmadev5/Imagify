@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.imagedetail
+package com.jmdev.app.imagify.presentation.screens.imageDetailScreen
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

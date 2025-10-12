@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.mainscreen
+package com.jmdev.app.imagify.presentation.screens.mainScreen
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize

@@ -20,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.photo.FeedPhoto
-import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreenViewModel
+import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
 import com.jmdev.app.imagify.utils.BlurHashDecoder
 import com.jmdev.app.imagify.utils.PhotoQuality
 import com.jmdev.app.imagify.utils.coilImageBuilder

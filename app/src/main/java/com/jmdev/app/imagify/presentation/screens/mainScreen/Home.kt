@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.mainscreen
+package com.jmdev.app.imagify.presentation.screens.mainScreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

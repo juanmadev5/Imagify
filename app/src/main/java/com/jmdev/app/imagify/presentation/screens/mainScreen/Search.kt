@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.mainscreen
+package com.jmdev.app.imagify.presentation.screens.mainScreen
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement

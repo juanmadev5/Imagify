@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreenViewModel
+import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
 import com.jmdev.app.imagify.presentation.theme.topBarColors
 import kotlinx.coroutines.launch
 

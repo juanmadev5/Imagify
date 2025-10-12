@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.settings
+package com.jmdev.app.imagify.presentation.screens.settingsScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

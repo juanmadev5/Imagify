@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.presentation.screens.settings
+package com.jmdev.app.imagify.presentation.screens.settingsScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
