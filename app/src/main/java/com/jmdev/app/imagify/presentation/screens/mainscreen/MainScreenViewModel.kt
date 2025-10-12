@@ -6,8 +6,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.jmdev.app.imagify.App
-import com.jmdev.app.imagify.App.Companion.SEARCH_KEYWORDS
+import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
+import com.jmdev.app.imagify.DEFAULT_PHOTO_QUALITY
+import com.jmdev.app.imagify.SEARCH_KEYWORDS
 import com.jmdev.app.imagify.data.PhotoRepository
 import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.model.photo.FeedPhoto
@@ -39,13 +40,13 @@ class MainScreenViewModel @Inject constructor(
     var searchQuery = MutableStateFlow(SEARCH_KEYWORDS[Random.nextInt(SEARCH_KEYWORDS.size)])
         private set
 
-    var photoQuality = MutableStateFlow(App.DEFAULT_PHOTO_QUALITY)
+    var photoQuality = MutableStateFlow(DEFAULT_PHOTO_QUALITY)
         private set
 
-    private val _searchPhotoOrientation = MutableStateFlow(App.DEFAULT_PHOTO_ORIENTATION)
+    private val _searchPhotoOrientation = MutableStateFlow(DEFAULT_PHOTO_ORIENTATION)
 
     val searchPhotoOrientation: StateFlow<String> = _searchPhotoOrientation
-        .stateIn(viewModelScope, SharingStarted.Lazily, App.DEFAULT_PHOTO_ORIENTATION)
+        .stateIn(viewModelScope, SharingStarted.Lazily, DEFAULT_PHOTO_ORIENTATION)
 
     private val _homeRefreshTrigger = MutableSharedFlow<Unit>(replay = 1)
     private val _searchRefreshTrigger = MutableSharedFlow<Unit>(replay = 1)

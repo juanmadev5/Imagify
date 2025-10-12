@@ -5,7 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.jmdev.app.imagify.App
+import com.jmdev.app.imagify.BASE_URL
+import com.jmdev.app.imagify.DS_NAME
 import com.jmdev.app.imagify.network.AuthInterceptor
 import com.jmdev.app.imagify.network.UnsplashAPI
 import dagger.Module
@@ -33,7 +34,7 @@ object AppModule {
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         PreferenceDataStoreFactory.create(
             produceFile = {
-                context.preferencesDataStoreFile(App.DS_NAME)
+                context.preferencesDataStoreFile(DS_NAME)
             }
         )
 
@@ -41,7 +42,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl(App.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(provideInterceptor())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

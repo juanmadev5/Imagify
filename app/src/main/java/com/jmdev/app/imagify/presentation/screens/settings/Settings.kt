@@ -26,7 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.jmdev.app.imagify.App
+import com.jmdev.app.imagify.ORIENTATION_LANDSCAPE
+import com.jmdev.app.imagify.ORIENTATION_PORTRAIT
+import com.jmdev.app.imagify.ORIENTATION_SQUARISH
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.OrientationModel
 import com.jmdev.app.imagify.model.QualityModel
@@ -61,15 +63,15 @@ fun Settings(
     val orientationList = listOf(
         OrientationModel(
             orientation = R.string.orientation_portrait,
-            orientationToApply = App.ORIENTATION_PORTRAIT
+            orientationToApply = ORIENTATION_PORTRAIT
         ),
         OrientationModel(
             orientation = R.string.orientation_landscape,
-            orientationToApply = App.ORIENTATION_LANDSCAPE
+            orientationToApply = ORIENTATION_LANDSCAPE
         ),
         OrientationModel(
             orientation = R.string.orientation_squarish,
-            orientationToApply = App.ORIENTATION_SQUARISH
+            orientationToApply = ORIENTATION_SQUARISH
         )
     )
 

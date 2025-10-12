@@ -3,7 +3,8 @@ package com.jmdev.app.imagify.presentation.screens.settings
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jmdev.app.imagify.App
+import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
+import com.jmdev.app.imagify.DEFAULT_PHOTO_QUALITY
 import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.utils.PhotoQuality
 import com.jmdev.app.imagify.utils.updateSetting
@@ -17,10 +18,10 @@ class SettingsViewModel @Inject constructor(
     private val userPreferences: UserPreferences,
 ) : ViewModel() {
 
-    var photoQuality = MutableStateFlow(App.DEFAULT_PHOTO_QUALITY)
+    var photoQuality = MutableStateFlow(DEFAULT_PHOTO_QUALITY)
         private set
 
-    var searchPhotoOrientation = MutableStateFlow(App.DEFAULT_PHOTO_ORIENTATION)
+    var searchPhotoOrientation = MutableStateFlow(DEFAULT_PHOTO_ORIENTATION)
         private set
 
     init {

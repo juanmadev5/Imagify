@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.jmdev.app.imagify.App
+import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
 import com.jmdev.app.imagify.utils.PhotoQuality
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -34,7 +34,7 @@ class UserPreferences @Inject constructor(private val dataStore: DataStore<Prefe
                 saveQuality = pref[stringPreferencesKey(KEY_QUALITY)]?.let { PhotoQuality.valueOf(it) }
                     ?: PhotoQuality.REGULAR,
                 searchOrientation = pref[stringPreferencesKey(KEY_ORIENTATION)]
-                    ?: App.DEFAULT_PHOTO_ORIENTATION
+                    ?: DEFAULT_PHOTO_ORIENTATION
             )
         }
     }
