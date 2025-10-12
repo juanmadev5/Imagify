@@ -2,10 +2,10 @@ package com.jmdev.app.imagify.utils
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.webkit.MimeTypeMap
+import androidx.core.net.toUri
 import com.jmdev.app.imagify.R
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class PhotoDownloadManager @Inject constructor() {
         permissionGranted: Boolean,
     ) {
         if (permissionGranted) {
-            val downloadUri = Uri.parse(photoUrl)
+            val downloadUri = photoUrl.toUri()
 
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(photoUrl)
             val finalFileName = if (fileExtension.isNullOrEmpty()) {
