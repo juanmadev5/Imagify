@@ -4,13 +4,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jmdev.app.imagify.presentation.screens.imagedetail.ImageDetail
 import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreen
 import com.jmdev.app.imagify.presentation.screens.settings.Settings
+import com.jmdev.app.imagify.presentation.screens.settings.SettingsViewModel
 import com.jmdev.app.imagify.presentation.theme.ImagifyTheme
 
 @Composable
@@ -18,6 +22,10 @@ fun NavigationController(
     permissionRequest: () -> Unit,
 ) {
     val navController = rememberNavController()
+
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val photoQuality by settingsViewModel.photoQuality.collectAsState()
+//    val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsState()
 
     ImagifyTheme {
         Surface(
@@ -50,11 +58,13 @@ fun NavigationController(
                     ImageDetail(
                         navigateToHome = { navController.popBackStack() },
                         permissionRequest = { permissionRequest() },
-                        photoId = it.arguments?.getString("id") ?: ""
+                        photoId = it.arguments?.getString("id") ?: "",
+                        quality = photoQuality.name
                     )
                 }
                 composable(route = NavigationRoutes.Settings.route) {
                     Settings(
+                        settingsViewModel = settingsViewModel,
                         navigateToHome = {
                             navController.popBackStack()
                         }

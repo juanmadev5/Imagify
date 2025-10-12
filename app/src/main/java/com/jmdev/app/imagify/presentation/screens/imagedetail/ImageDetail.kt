@@ -42,6 +42,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.DetailImageComponent
 import com.jmdev.app.imagify.presentation.components.ImageDetailTopBar
+import com.jmdev.app.imagify.presentation.components.PhotoMetadataItem
+import com.jmdev.app.imagify.utils.PhotoQuality
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,26 +53,13 @@ fun ImageDetail(
     navigateToHome: () -> Unit,
     permissionRequest: () -> Unit,
     photoId: String,
+    quality: String,
 ) {
-
-    @Composable
-    fun photoDataList(data: Pair<String, String?>?) {
-        if (data != null) {
-            Text(
-                text = data.first + data.second,
-                modifier = modifier.padding(
-                    top = dimensionResource(id = R.dimen.padding_normal),
-                    start = dimensionResource(id = R.dimen.padding_large),
-                    end = dimensionResource(id = R.dimen.padding_large),
-                    bottom = dimensionResource(id = R.dimen.padding_normal)
-                )
-            )
-        }
-    }
 
     var loading by remember { mutableStateOf(false) }
 
     val imageDetailViewModel: ImageDetailViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
         loading = true
         imageDetailViewModel.setPermissionGranted()
@@ -79,6 +68,13 @@ fun ImageDetail(
     }
 
     val photo by imageDetailViewModel.photo.collectAsStateWithLifecycle(null)
+
+    val photoQuality = when (quality) {
+        PhotoQuality.RAW.name -> photo!!.urls.raw
+        PhotoQuality.FULL.name -> photo!!.urls.full
+        PhotoQuality.REGULAR.name -> photo!!.urls.regular
+        else -> photo!!.urls.full
+    }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -170,7 +166,7 @@ fun ImageDetail(
                 item {
                     DetailImageComponent(
                         data = photo!!,
-                        url = photo!!.urls.full
+                        url = photoQuality
                     )
                 }
                 item {
@@ -247,7 +243,7 @@ fun ImageDetail(
                 }
 
                 items(photoDataList.size) {
-                    photoDataList(data = photoDataList[it])
+                    PhotoMetadataItem(data = photoDataList[it])
                 }
 
                 item {
@@ -270,7 +266,7 @@ fun ImageDetail(
                 }
 
                 items(camera.size) {
-                    photoDataList(data = camera[it])
+                    PhotoMetadataItem(data = camera[it])
                 }
             }
         }
