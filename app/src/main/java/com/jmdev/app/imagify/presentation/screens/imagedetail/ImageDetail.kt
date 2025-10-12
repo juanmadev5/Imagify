@@ -117,7 +117,7 @@ fun ImageDetail(
             val photoDataList = listOf(
                 Pair(
                     stringResource(R.string.created_at),
-                    photo?.createdAt?.dropLast(10) ?: "Not available"
+                    photo?.createdAt?.dropLast(10) ?: stringResource(R.string.not_available)
                 ),
                 Pair(
                     stringResource(R.string.likes_data), "${photo?.likes ?: ""}"
@@ -131,30 +131,30 @@ fun ImageDetail(
                 ),
                 Pair(
                     "Location: ",
-                    "${photo!!.location?.city ?: "Not available"} | ${photo!!.location?.country ?: ""}"
+                    "${photo!!.location?.city ?: stringResource(R.string.not_available)} | ${photo!!.location?.country ?: ""}"
                 )
             )
 
             val camera = listOf(
                 Pair(
                     stringResource(R.string.camera_name),
-                    photo!!.exif?.name ?: "Not available"
+                    photo!!.exif?.name ?: stringResource(R.string.not_available)
                 ),
                 Pair(
                     stringResource(R.string.exposure_time),
-                    photo!!.exif?.exposureTime ?: "Not available"
+                    photo!!.exif?.exposureTime ?: stringResource(R.string.not_available)
                 ),
                 Pair(
                     stringResource(R.string.aperture),
-                    photo!!.exif?.aperture ?: "Not available"
+                    photo!!.exif?.aperture ?: stringResource(R.string.not_available)
                 ),
                 Pair(
                     stringResource(R.string.focal_lenght),
-                    photo!!.exif?.focalLength ?: "Not available"
+                    photo!!.exif?.focalLength ?: stringResource(R.string.not_available)
                 ),
                 Pair(
                     stringResource(R.string.iso),
-                    "${photo!!.exif?.iso ?: "Not available"}"
+                    "${photo!!.exif?.iso ?: stringResource(R.string.not_available)}"
                 )
             )
             LazyColumn(
