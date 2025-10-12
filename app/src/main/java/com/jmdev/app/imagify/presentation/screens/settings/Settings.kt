@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.ORIENTATION_LANDSCAPE
 import com.jmdev.app.imagify.ORIENTATION_PORTRAIT
@@ -37,10 +36,10 @@ import com.jmdev.app.imagify.utils.PhotoQuality
 
 @Composable
 fun Settings(
+    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier,
     navigateToHome: () -> Unit,
 ) {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
 
     val photoQuality by settingsViewModel.photoQuality.collectAsStateWithLifecycle()
     val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsStateWithLifecycle()
