@@ -47,7 +47,7 @@ fun NavigationController(
                         },
                         navigateToDetail = { photoId, url ->
                             navController.navigate(
-                                NavigationRoutes.ImageDetail.createRoute(photoId, url)
+                                NavigationRoutes.ImageDetail.createRoute(photoId)
                             ) {
                                 launchSingleTop = true
                             }
@@ -59,7 +59,7 @@ fun NavigationController(
                         navigateToHome = { navController.popBackStack() },
                         permissionRequest = { permissionRequest() },
                         photoId = it.arguments?.getString("id") ?: "",
-                        quality = photoQuality.name
+                        quality = photoQuality
                     )
                 }
                 composable(route = NavigationRoutes.Settings.route) {

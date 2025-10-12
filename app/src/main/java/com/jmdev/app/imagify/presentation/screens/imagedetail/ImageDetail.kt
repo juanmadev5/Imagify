@@ -53,7 +53,7 @@ fun ImageDetail(
     navigateToHome: () -> Unit,
     permissionRequest: () -> Unit,
     photoId: String,
-    quality: String,
+    quality: PhotoQuality,
 ) {
 
     var loading by remember { mutableStateOf(false) }
@@ -69,16 +69,16 @@ fun ImageDetail(
 
     val photo by imageDetailViewModel.photo.collectAsStateWithLifecycle(null)
 
-    val photoQuality = when (quality) {
-        PhotoQuality.RAW.name -> photo!!.urls.raw
-        PhotoQuality.FULL.name -> photo!!.urls.full
-        PhotoQuality.REGULAR.name -> photo!!.urls.regular
-        else -> photo!!.urls.full
-    }
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     if (!loading && photo != null) {
+
+        val photoQuality = when (quality) {
+            PhotoQuality.RAW -> photo!!.urls.raw
+            PhotoQuality.FULL -> photo!!.urls.full
+            PhotoQuality.REGULAR -> photo!!.urls.regular
+        }
+
         Scaffold(
             modifier = modifier
                 .safeDrawingPadding()
