@@ -1,16 +1,13 @@
 package com.jmdev.app.imagify.presentation.navigation
 
-import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.jmdev.app.imagify.presentation.screens.imagedetail.ImageDetail
 import com.jmdev.app.imagify.presentation.screens.mainscreen.MainScreen
 import com.jmdev.app.imagify.presentation.screens.settings.Settings
@@ -42,30 +39,18 @@ fun NavigationController(
                         },
                         navigateToDetail = { photoId, url ->
                             navController.navigate(
-                                NavigationRoutes.ImageDetail.route.replace(
-                                    "{id}",
-                                    photoId
-                                ).replace("{url}", Uri.encode(url))
+                                NavigationRoutes.ImageDetail.createRoute(photoId, url)
                             ) {
                                 launchSingleTop = true
                             }
                         }
                     )
                 }
-                composable(
-                    route = NavigationRoutes.ImageDetail.route,
-                    arguments = listOf(
-                        navArgument("id") { type = NavType.StringType },
-                        navArgument("url") { type = NavType.StringType }
-                    ),
-                ) {
-                    val photoId = it.arguments?.getString("id") ?: ""
-                    val url = it.arguments?.getString("url") ?: ""
+                composable(route = NavigationRoutes.ImageDetail.route) {
                     ImageDetail(
                         navigateToHome = { navController.popBackStack() },
                         permissionRequest = { permissionRequest() },
-                        photoId = photoId,
-                        url = url
+                        photoId = it.arguments?.getString("id") ?: ""
                     )
                 }
                 composable(route = NavigationRoutes.Settings.route) {
