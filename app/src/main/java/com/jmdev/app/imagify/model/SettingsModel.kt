@@ -10,7 +10,6 @@ data class QualityModel(
     val qualityToApply: PhotoQuality,
 )
 
-@Stable
 data class OrientationModel(
     @StringRes val orientation: Int,
     val orientationToApply: String,
