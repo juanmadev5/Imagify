@@ -10,7 +10,6 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 - 🎨 Interfaz moderna con Material 3 y Jetpack Compose
 - ⚡️ Carga rápida y caché inteligente con Coil
 - 🔒 Preferencias de usuario y configuración personalizable
-- 🌙 Modo claro/oscuro
 - 🔗 Detalles completos de cada foto y autor
 - 🛡️ Integración con Firebase Crashlytics y Analytics
 
@@ -28,13 +27,13 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 	```
 2. **Abre el proyecto en Android Studio.**
 3. **Configura tu clave de API de Unsplash:**
-	- Ve a `app/src/main/java/com/jmdev/app/imagify/App.kt` y agrega tu API Key en la constante `API_KEY`.
+	- Ve a `app/src/main/java/com/jmdev/app/imagify/Constants.kt` y agrega tu API Key en la constante `API_KEY`.
 4. **Sincroniza dependencias y ejecuta en tu dispositivo/emulador.**
 
 ## Dependencias principales
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
-- [Hilt](https://dagger.dev/hilt/)
+- [Koin](https://insert-koin.io/)
 - [Retrofit](https://square.github.io/retrofit/)
 - [Coil](https://coil-kt.github.io/coil/)
 - [Firebase Crashlytics, Analytics, Perf](https://firebase.google.com/)
@@ -55,7 +54,6 @@ Imagify/
 │   │   │   │   ├── presentation/# UI y pantallas
 │   │   │   │   ├── utils/       # Utilidades
 │   │   │   ├── res/             # Recursos gráficos y strings
-│   │   ├── test/                # Tests unitarios
 │   ├── build.gradle.kts
 ├── assets/                      # Screenshots
 ├── README.md
