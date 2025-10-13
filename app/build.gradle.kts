@@ -3,18 +3,20 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.serialization)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.perf)
 }
 
 android {
-    val sdk = 35
-    val jVersion = JavaVersion.VERSION_1_8
+    val sdk = 36
+    val jVersion = JavaVersion.VERSION_21
+
     namespace = "com.jmdev.app.imagify"
-    compileSdk = sdk
+
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.jmdev.app.imagify"
@@ -43,15 +45,10 @@ android {
         sourceCompatibility = jVersion
         targetCompatibility = jVersion
     }
-    kotlinOptions {
-        jvmTarget = jVersion.toString()
-    }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -60,10 +57,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
@@ -77,7 +73,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.hilt.navigation.compose)
+    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)

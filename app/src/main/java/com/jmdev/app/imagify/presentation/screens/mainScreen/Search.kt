@@ -30,12 +30,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.PhotoCard
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun Search(
@@ -45,7 +45,7 @@ fun Search(
     searchPhotosLazyState: LazyListState,
     state: MutableState<Boolean>,
 ) {
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val mainScreenViewModel: MainScreenViewModel = koinViewModel()
     val searchPhotos = mainScreenViewModel.searchPhotos.collectAsLazyPagingItems()
     val orientation = mainScreenViewModel.searchPhotoOrientation.collectAsState()
     val scope = rememberCoroutineScope()

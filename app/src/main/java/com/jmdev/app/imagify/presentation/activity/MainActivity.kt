@@ -9,14 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jmdev.app.imagify.presentation.navigation.NavigationController
 import com.jmdev.app.imagify.utils.PermissionManager
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var permissionManager: PermissionManager
+    private val permissionManager: PermissionManager by inject()
 
     private val storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     private val requestPermissionLauncher =

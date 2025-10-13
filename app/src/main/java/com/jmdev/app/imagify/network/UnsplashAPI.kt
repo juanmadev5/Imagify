@@ -3,6 +3,7 @@ package com.jmdev.app.imagify.network
 import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
 import com.jmdev.app.imagify.model.SearchPhotosResult
 import com.jmdev.app.imagify.model.photo.FeedPhoto
+import com.jmdev.app.imagify.model.photo.User
 import com.jmdev.app.imagify.model.unsplashphoto.Photo
 import retrofit2.Response
 import retrofit2.http.GET
@@ -27,4 +28,9 @@ interface UnsplashAPI {
     suspend fun getPhoto(
         @Path("id") id: String,
     ): Response<Photo>
+
+    @GET("/users/{username}")
+    suspend fun getUserProfile(
+        @Path("username") username: String
+    ): Response<User>
 }

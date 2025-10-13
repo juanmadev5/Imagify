@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +15,7 @@ import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreen
 import com.jmdev.app.imagify.presentation.screens.settingsScreen.Settings
 import com.jmdev.app.imagify.presentation.screens.settingsScreen.SettingsViewModel
 import com.jmdev.app.imagify.presentation.theme.ImagifyTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavigationController(
@@ -23,7 +23,7 @@ fun NavigationController(
 ) {
     val navController = rememberNavController()
 
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel: SettingsViewModel = koinViewModel()
     val photoQuality by settingsViewModel.photoQuality.collectAsState()
 //    val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsState()
 

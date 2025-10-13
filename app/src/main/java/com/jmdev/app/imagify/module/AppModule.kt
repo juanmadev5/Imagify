@@ -1,54 +1,91 @@
 package com.jmdev.app.imagify.module
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.jmdev.app.imagify.BASE_URL
 import com.jmdev.app.imagify.DS_NAME
+import com.jmdev.app.imagify.data.PhotoRepository
+import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.network.AuthInterceptor
 import com.jmdev.app.imagify.network.UnsplashAPI
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import com.jmdev.app.imagify.presentation.screens.imageDetailScreen.ImageDetailViewModel
+import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
+import com.jmdev.app.imagify.presentation.screens.settingsScreen.SettingsViewModel
+import com.jmdev.app.imagify.utils.PermissionManager
+import com.jmdev.app.imagify.utils.PhotoDownloadManager
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
+val appModule = module {
 
-    @Provides
-    @Singleton
-    fun provideInterceptor() = OkHttpClient.Builder()
-        .addInterceptor(AuthInterceptor())
-        .build()
+    // Interceptor
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+    }
 
-    @Provides
-    @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+    // DataStore
+    single<DataStore<Preferences>> {
         PreferenceDataStoreFactory.create(
             produceFile = {
-                context.preferencesDataStoreFile(DS_NAME)
+                androidContext().preferencesDataStoreFile(DS_NAME)
             }
         )
+    }
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit =
+    // Retrofit
+    single {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(provideInterceptor())
+            .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
 
-    @Provides
-    @Singleton
-    fun provideApi(retrofit: Retrofit): UnsplashAPI = retrofit.create(UnsplashAPI::class.java)
+    // API
+    single<UnsplashAPI> {
+        get<Retrofit>().create(UnsplashAPI::class.java)
+    }
 
+    single { PermissionManager() }
+
+    single {
+        PhotoRepository(
+            service = get()
+        )
+    }
+
+    single {
+        UserPreferences(
+            dataStore = get()
+        )
+    }
+
+    single { PhotoDownloadManager() }
+
+    viewModel {
+        MainScreenViewModel(
+            photoRepository = get(),
+            userPreferences = get()
+        )
+    }
+
+    viewModel {
+        ImageDetailViewModel(
+            photoRepository = get(),
+            downloadManager = get(),
+            permissionManager = get()
+        )
+    }
+
+    viewModel {
+        SettingsViewModel(userPreferences = get())
+    }
 }

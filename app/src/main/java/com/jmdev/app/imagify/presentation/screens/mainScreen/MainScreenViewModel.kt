@@ -14,7 +14,6 @@ import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.model.photo.FeedPhoto
 import com.jmdev.app.imagify.presentation.paging.HomePagingSource
 import com.jmdev.app.imagify.presentation.paging.SearchPagingSource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,12 +26,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class MainScreenViewModel @Inject constructor(
+class MainScreenViewModel(
     private val photoRepository: PhotoRepository,
     private val userPreferences: UserPreferences,
 ) : ViewModel() {

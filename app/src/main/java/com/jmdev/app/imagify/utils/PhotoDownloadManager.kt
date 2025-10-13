@@ -7,9 +7,8 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.core.net.toUri
 import com.jmdev.app.imagify.R
-import javax.inject.Inject
 
-class PhotoDownloadManager @Inject constructor() {
+class PhotoDownloadManager {
 
     fun downloadPhoto(
         context: Context,

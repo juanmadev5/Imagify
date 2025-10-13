@@ -8,13 +8,10 @@ import com.jmdev.app.imagify.DEFAULT_PHOTO_QUALITY
 import com.jmdev.app.imagify.data.UserPreferences
 import com.jmdev.app.imagify.utils.PhotoQuality
 import com.jmdev.app.imagify.utils.updateSetting
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel(
     private val userPreferences: UserPreferences,
 ) : ViewModel() {
 

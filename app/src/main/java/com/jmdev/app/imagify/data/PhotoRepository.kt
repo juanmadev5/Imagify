@@ -2,13 +2,11 @@ package com.jmdev.app.imagify.data
 
 import com.jmdev.app.imagify.model.SearchPhotosResult
 import com.jmdev.app.imagify.model.photo.FeedPhoto
+import com.jmdev.app.imagify.model.photo.User
 import com.jmdev.app.imagify.model.unsplashphoto.Photo
 import com.jmdev.app.imagify.network.UnsplashAPI
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PhotoRepository @Inject constructor(private val service: UnsplashAPI) {
+class PhotoRepository(private val service: UnsplashAPI) {
 
     suspend fun getFeedPhotos(page: Int): List<FeedPhoto> {
         val response = service.getPhotosEditorial(page)
@@ -22,6 +20,11 @@ class PhotoRepository @Inject constructor(private val service: UnsplashAPI) {
 
     suspend fun getPhoto(id: String): Photo? {
         val response = service.getPhoto(id)
+        return response.body()
+    }
+
+    suspend fun getUserProfile(username: String): User? {
+        val response = service.getUserProfile(username)
         return response.body()
     }
 }

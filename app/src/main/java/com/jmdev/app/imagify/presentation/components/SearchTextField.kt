@@ -25,12 +25,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
 import com.jmdev.app.imagify.presentation.theme.topBarColors
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +40,7 @@ fun SearchTextField(
     scrollBehavior: TopAppBarScrollBehavior,
     searchLazyState: LazyListState,
 ) {
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val mainScreenViewModel: MainScreenViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
 
     val query = rememberSaveable {

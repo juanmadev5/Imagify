@@ -11,11 +11,8 @@ import android.provider.Settings
 import androidx.core.content.ContextCompat
 import com.jmdev.app.imagify.R
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PermissionManager @Inject constructor() {
+class PermissionManager {
     val isPermissionGranted = MutableStateFlow(false)
 
     fun setPermissionGranted(granted: Boolean) {

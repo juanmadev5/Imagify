@@ -9,9 +9,8 @@ import com.jmdev.app.imagify.utils.PhotoQuality
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class UserPreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
+class UserPreferences(private val dataStore: DataStore<Preferences>) {
     companion object {
         private const val KEY_QUALITY = "quality"
         private const val KEY_ORIENTATION = "orientation"

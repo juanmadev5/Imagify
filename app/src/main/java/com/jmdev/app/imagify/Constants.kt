@@ -3,7 +3,7 @@ package com.jmdev.app.imagify
 import com.jmdev.app.imagify.utils.PhotoQuality
 
 const val BASE_URL = "https://api.unsplash.com/"
-const val UNSPLASH_API_KEY = "nfCDir0BVx1TMBkrJvguzkxCWJFCB2fUzm8_pln3nTY"
+const val UNSPLASH_API_KEY = "34Px8PSFVx-zYZ5lePDNs-RQhjxeiy1_fkJECP2-mm4"
 const val ORIENTATION_PORTRAIT = "portrait"
 const val ORIENTATION_LANDSCAPE = "landscape"
 const val ORIENTATION_SQUARISH = "squarish"

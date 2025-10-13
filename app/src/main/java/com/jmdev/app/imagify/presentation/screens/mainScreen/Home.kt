@@ -16,11 +16,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.PhotoCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun Home(
@@ -28,7 +28,7 @@ fun Home(
     modifier: Modifier,
     scaffoldPaddingValues: PaddingValues,
 ) {
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val mainScreenViewModel: MainScreenViewModel = koinViewModel()
     val homePhotos = mainScreenViewModel.homePhotos.collectAsLazyPagingItems()
 
     if (homePhotos.loadState.refresh is LoadState.Loading) {

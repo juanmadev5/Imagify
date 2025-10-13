@@ -7,10 +7,18 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
-import dagger.hilt.android.HiltAndroidApp
+import com.jmdev.app.imagify.module.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
 class App : Application(), ImageLoaderFactory {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@App)
+            modules(appModule)
+        }
+    }
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader(this).newBuilder()
