@@ -37,13 +37,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
+import com.jmdev.app.imagify.presentation.components.AuthorComponent
 import com.jmdev.app.imagify.presentation.components.DetailImageComponent
 import com.jmdev.app.imagify.presentation.components.ImageDetailTopBar
 import com.jmdev.app.imagify.presentation.components.PhotoMetadataItem
 import com.jmdev.app.imagify.utils.PhotoQuality
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +59,7 @@ fun ImageDetail(
 
     var loading by remember { mutableStateOf(false) }
 
-    val imageDetailViewModel: ImageDetailViewModel = hiltViewModel()
+    val imageDetailViewModel: ImageDetailViewModel = koinViewModel()
 
     LaunchedEffect(Unit) {
         loading = true
@@ -73,11 +74,15 @@ fun ImageDetail(
 
     if (!loading && photo != null) {
 
+        imageDetailViewModel.getUserProfile(photo!!.user.username)
+
         val photoQuality = when (quality) {
             PhotoQuality.RAW -> photo!!.urls.raw
             PhotoQuality.FULL -> photo!!.urls.full
             PhotoQuality.REGULAR -> photo!!.urls.regular
         }
+
+        val userProfile by imageDetailViewModel.userProfile.collectAsStateWithLifecycle()
 
         Scaffold(
             modifier = modifier
@@ -185,13 +190,7 @@ fun ImageDetail(
                 }
 
                 item {
-                    Text(
-                        "${photo!!.user.name} | @${photo!!.user.username}",
-                        modifier = modifier.padding(
-                            start = dimensionResource(id = R.dimen.padding_large),
-                            end = dimensionResource(id = R.dimen.padding_large)
-                        )
-                    )
+                    AuthorComponent(modifier, userProfile)
                 }
 
                 item {

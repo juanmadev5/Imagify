@@ -1,10 +1,9 @@
 package com.jmdev.app.imagify.presentation.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -20,15 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.model.photo.FeedPhoto
+import com.jmdev.app.imagify.model.photo.User
 import com.jmdev.app.imagify.utils.coilImageBuilder
 
 @Composable
-fun AuthorComponent(modifier: Modifier = Modifier, data: FeedPhoto) {
+fun AuthorComponent(modifier: Modifier = Modifier, data: User?) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+            .wrapContentWidth()
             .padding(
                 bottom = dimensionResource(id = R.dimen.padding_normal),
                 start = dimensionResource(id = R.dimen.padding_12),
@@ -37,13 +35,13 @@ fun AuthorComponent(modifier: Modifier = Modifier, data: FeedPhoto) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         SubcomposeAsyncImage(
-            model = data.user?.profileImage?.let {
+            model = data?.profileImage?.let {
                 coilImageBuilder(
                     data = it.medium,
                     cacheKey = it.medium
                 )
             },
-            contentDescription = data.description,
+            contentDescription = data?.username,
             modifier = modifier
                 .size(dimensionResource(id = R.dimen.user_profile_image_size))
                 .clip(
@@ -60,7 +58,7 @@ fun AuthorComponent(modifier: Modifier = Modifier, data: FeedPhoto) {
             }
         )
         Text(
-            text = "${data.user?.name} | @${data.user?.username}",
+            text = "${data?.name ?: ""} | @${data?.username ?: ""}",
             modifier = modifier.padding(dimensionResource(id = R.dimen.padding_normal)),
             fontWeight = FontWeight(600)
         )
