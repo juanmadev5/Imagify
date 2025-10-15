@@ -11,7 +11,7 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 - ⚡️ Carga rápida y caché inteligente con Coil
 - 🔒 Preferencias de usuario y configuración personalizable
 - 🔗 Detalles completos de cada foto y autor
-- 🛡️ Integración con Firebase Crashlytics y Analytics
+- 🛡️ Integración con Firebase Crashlytics, Analytics y Performance
 
 ## Screenshots
 
@@ -59,6 +59,25 @@ Imagify/
 ├── README.md
 ```
 
+## 🧪 Pruebas y calidad del código
+Imagify incluye pruebas unitarias que validan la configuración base de la aplicación y la integración de dependencias con Koin y Coil.
+
+El archivo principal de tests es:
+```
+app/src/test/java/com/jmdev/app/imagify/AppTest.kt
+```
+Qué se prueba:
+
+- ✅ Verificación de módulos de Koin (appModule.verify())
+
+- ✅ Configuración correcta del ImageLoader de Coil
+
+	- Políticas de caché de memoria y disco habilitadas
+
+	- Existencia de cachés en memoria y disco
+
+- ✅ Correcta inicialización del entorno de test con Dispatchers.setMain
+
 ## Créditos y agradecimientos
 
 - Fotos proporcionadas por [Unsplash](https://unsplash.com/)
@@ -68,3 +87,4 @@ Imagify/
 ---
 
 ¡Contribuciones y sugerencias son bienvenidas! ⭐
+
