@@ -24,6 +24,8 @@ crashlitics = "3.0.6"
 firebasePerf = "2.0.1"
 materialIcons = "1.7.8"
 koin = "4.1.1"
+mockitoCore = "5.20.0"
+coroutinesTest = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +60,10 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref ="materialIcons" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -65,5 +71,5 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlitics" }
+crashlitics = { id = "com.google.firebase.crashlytics", version.ref = "crashlitics" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerf" }
