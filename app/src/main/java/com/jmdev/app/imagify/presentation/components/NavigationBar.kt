@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.NavItems
@@ -33,10 +37,21 @@ import com.jmdev.app.imagify.model.NavItems
 @Composable
 fun NavigationBar(
     modifier: Modifier = Modifier,
-    navItemList: List<NavItems>,
     navIndex: MutableIntState,
     scrollBehavior: BottomAppBarScrollBehavior,
 ) {
+    val navItemList = listOf(
+        NavItems(
+            title = stringResource(R.string.home),
+            icon = Icons.Filled.Home,
+            index = 0
+        ),
+        NavItems(
+            title = stringResource(R.string.search),
+            icon = Icons.Filled.Search,
+            index = 1
+        )
+    )
     BottomAppBar(scrollBehavior = scrollBehavior, containerColor = Color.Transparent) {
         Row(
             modifier = modifier

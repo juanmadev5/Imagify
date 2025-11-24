@@ -1,6 +1,5 @@
 package com.jmdev.app.imagify.presentation.components
 
-import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -17,6 +16,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -29,11 +29,11 @@ import com.jmdev.app.imagify.utils.shareUrl
 @Composable
 fun ImageDetailTopBar(
     modifier: Modifier = Modifier,
-    context: Context,
     navigateToHome: () -> Unit,
     url: String,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    val context = LocalContext.current
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
@@ -47,11 +47,12 @@ fun ImageDetailTopBar(
         },
         modifier = modifier.statusBarsPadding(),
         colors = TopAppBarColors(
-            scrolledContainerColor = MaterialTheme.colorScheme.background,
             containerColor = MaterialTheme.colorScheme.background,
-            actionIconContentColor = MaterialTheme.colorScheme.primary,
+            scrolledContainerColor = MaterialTheme.colorScheme.background,
             navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-            titleContentColor = MaterialTheme.colorScheme.onBackground
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            actionIconContentColor = MaterialTheme.colorScheme.primary,
+            subtitleContentColor = MaterialTheme.colorScheme.onBackground
         ),
         navigationIcon = {
             IconButton(

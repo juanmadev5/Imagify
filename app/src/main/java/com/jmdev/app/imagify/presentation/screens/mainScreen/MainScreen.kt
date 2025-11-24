@@ -4,9 +4,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -17,9 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.model.NavItems
 import com.jmdev.app.imagify.presentation.components.HomeTopBar
 import com.jmdev.app.imagify.presentation.components.NavigationBar
 import com.jmdev.app.imagify.presentation.components.SearchTextField
@@ -38,18 +32,7 @@ fun MainScreen(
     val navIndex = rememberSaveable {
         mutableIntStateOf(0)
     }
-    val navItemList = listOf(
-        NavItems(
-            title = stringResource(R.string.home),
-            icon = Icons.Filled.Home,
-            index = 0
-        ),
-        NavItems(
-            title = stringResource(R.string.search),
-            icon = Icons.Filled.Search,
-            index = 1
-        )
-    )
+
     Scaffold(
         modifier = modifier
             .safeDrawingPadding()
@@ -72,7 +55,6 @@ fun MainScreen(
         },
         bottomBar = {
             NavigationBar(
-                navItemList = navItemList,
                 navIndex = navIndex,
                 scrollBehavior = navBarScrollBehavior
             )

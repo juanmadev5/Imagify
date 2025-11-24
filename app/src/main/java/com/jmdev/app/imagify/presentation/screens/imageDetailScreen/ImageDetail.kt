@@ -91,7 +91,6 @@ fun ImageDetail(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 ImageDetailTopBar(
-                    context = context,
                     navigateToHome = { navigateToHome() },
                     url = photo!!.links.html,
                     scrollBehavior = scrollBehavior
