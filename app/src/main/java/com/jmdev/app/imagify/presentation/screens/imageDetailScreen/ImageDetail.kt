@@ -50,12 +50,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ImageDetail(
     modifier: Modifier = Modifier,
-    context: Context = LocalContext.current,
     navigateToHome: () -> Unit,
     permissionRequest: () -> Unit,
     photoId: String,
     quality: PhotoQuality,
 ) {
+    val context: Context = LocalContext.current
 
     var loading by remember { mutableStateOf(false) }
 

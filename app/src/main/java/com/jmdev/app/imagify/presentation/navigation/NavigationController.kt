@@ -25,7 +25,6 @@ fun NavigationController(
 
     val settingsViewModel: SettingsViewModel = koinViewModel()
     val photoQuality by settingsViewModel.photoQuality.collectAsState()
-//    val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsState()
 
     ImagifyTheme {
         Surface(
@@ -45,7 +44,7 @@ fun NavigationController(
                                 launchSingleTop = true
                             }
                         },
-                        navigateToDetail = { photoId, url ->
+                        navigateToDetail = { photoId, _ ->
                             navController.navigate(
                                 NavigationRoutes.ImageDetail.createRoute(photoId)
                             ) {
@@ -64,7 +63,6 @@ fun NavigationController(
                 }
                 composable(route = NavigationRoutes.Settings.route) {
                     Settings(
-                        settingsViewModel = settingsViewModel,
                         navigateToHome = {
                             navController.popBackStack()
                         }

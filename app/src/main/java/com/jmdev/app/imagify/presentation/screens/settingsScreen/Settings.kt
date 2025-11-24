@@ -33,14 +33,14 @@ import com.jmdev.app.imagify.model.OrientationModel
 import com.jmdev.app.imagify.model.QualityModel
 import com.jmdev.app.imagify.presentation.components.SelectorComponent
 import com.jmdev.app.imagify.utils.PhotoQuality
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun Settings(
-    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier,
     navigateToHome: () -> Unit,
 ) {
-
+    val settingsViewModel: SettingsViewModel = koinViewModel()
     val photoQuality by settingsViewModel.photoQuality.collectAsStateWithLifecycle()
     val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsStateWithLifecycle()
 
