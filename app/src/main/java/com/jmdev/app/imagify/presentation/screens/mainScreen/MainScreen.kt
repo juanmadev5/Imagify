@@ -35,8 +35,8 @@ fun MainScreen(
 
     Scaffold(
         modifier = modifier
-            .safeDrawingPadding()
             .fillMaxSize()
+            .safeDrawingPadding()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .nestedScroll(navBarScrollBehavior.nestedScrollConnection),
         topBar = {
@@ -48,7 +48,6 @@ fun MainScreen(
             } else {
                 SearchTextField(
                     state = state,
-                    scrollBehavior = scrollBehavior,
                     searchLazyState = searchLazyState,
                 )
             }
