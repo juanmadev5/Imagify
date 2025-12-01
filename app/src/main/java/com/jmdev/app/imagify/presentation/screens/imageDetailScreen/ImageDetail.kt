@@ -51,7 +51,6 @@ import org.koin.androidx.compose.koinViewModel
 fun ImageDetail(
     modifier: Modifier = Modifier,
     navigateToHome: () -> Unit,
-    permissionRequest: () -> Unit,
     photoId: String,
     quality: PhotoQuality,
 ) {
@@ -63,7 +62,6 @@ fun ImageDetail(
 
     LaunchedEffect(Unit) {
         loading = true
-        imageDetailViewModel.setPermissionGranted()
         imageDetailViewModel.getPhoto(photoId)
         loading = false
     }
@@ -98,16 +96,11 @@ fun ImageDetail(
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    val granted = imageDetailViewModel.isPermissionGranted.value
-                    if (!granted) {
-                        permissionRequest()
-                    } else {
-                        imageDetailViewModel.downloadPhoto(
-                            context,
-                            photo!!.links.download,
-                            "${photo!!.user.username}_${photo!!.user.name}_${photo!!.createdAt}"
-                        )
-                    }
+                    imageDetailViewModel.downloadPhoto(
+                        context,
+                        photo!!.links.download,
+                        "${photo!!.user.username}_${photo!!.user.name}_${photo!!.createdAt}"
+                    )
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_download_photo),

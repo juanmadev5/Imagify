@@ -18,9 +18,7 @@ import com.jmdev.app.imagify.presentation.theme.ImagifyTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NavigationController(
-    permissionRequest: () -> Unit,
-) {
+fun NavigationController() {
     val navController = rememberNavController()
 
     val settingsViewModel: SettingsViewModel = koinViewModel()
@@ -56,7 +54,6 @@ fun NavigationController(
                 composable(route = NavigationRoutes.ImageDetail.route) {
                     ImageDetail(
                         navigateToHome = { navController.popBackStack() },
-                        permissionRequest = { permissionRequest() },
                         photoId = it.arguments?.getString("id") ?: "",
                         quality = photoQuality
                     )

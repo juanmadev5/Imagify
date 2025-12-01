@@ -13,7 +13,6 @@ import com.jmdev.app.imagify.network.UnsplashAPI
 import com.jmdev.app.imagify.presentation.screens.imageDetailScreen.ImageDetailViewModel
 import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
 import com.jmdev.app.imagify.presentation.screens.settingsScreen.SettingsViewModel
-import com.jmdev.app.imagify.utils.PermissionManager
 import com.jmdev.app.imagify.utils.PhotoDownloadManager
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -54,8 +53,6 @@ val appModule = module {
         get<Retrofit>().create(UnsplashAPI::class.java)
     }
 
-    single { PermissionManager() }
-
     single {
         PhotoRepository(
             service = get()
@@ -80,8 +77,7 @@ val appModule = module {
     viewModel {
         ImageDetailViewModel(
             photoRepository = get(),
-            downloadManager = get(),
-            permissionManager = get()
+            downloadManager = get()
         )
     }
 

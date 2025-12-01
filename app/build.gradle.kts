@@ -15,15 +15,15 @@ android {
     namespace = "com.jmdev.app.imagify"
 
     compileSdk {
-        version = release(36)
+        version = release(sdk)
     }
 
     defaultConfig {
         applicationId = "com.jmdev.app.imagify"
-        minSdk = 24
+        minSdk = 33
         targetSdk = sdk
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
