@@ -1,9 +1,13 @@
 package com.jmdev.app.imagify.presentation.navigation
 
-sealed class NavigationRoutes(val route: String) {
-    data object Home : NavigationRoutes(route = "home")
-    data object ImageDetail : NavigationRoutes(route = "detail/{id}") {
-        fun createRoute(id: String) = "detail/$id"
-    }
-    data object Settings : NavigationRoutes(route = "settings")
-}
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object Main : NavKey
+
+@Serializable
+data class Details(val id: String) : NavKey
+
+@Serializable
+data object Settings : NavKey

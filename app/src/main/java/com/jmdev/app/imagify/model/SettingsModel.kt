@@ -11,6 +11,6 @@ data class QualityModel(
 )
 
 data class OrientationModel(
-    @StringRes val orientation: Int,
+    @param:StringRes val orientation: Int,
     val orientationToApply: String,
 )

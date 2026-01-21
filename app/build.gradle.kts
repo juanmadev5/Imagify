@@ -1,6 +1,7 @@
+import com.android.build.api.dsl.ApplicationExtension
+
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.crashlitics)
@@ -8,15 +9,12 @@ plugins {
     alias(libs.plugins.firebase.perf)
 }
 
-android {
+configure<ApplicationExtension> {
     val sdk = 36
     val jVersion = JavaVersion.VERSION_21
 
     namespace = "com.jmdev.app.imagify"
-
-    compileSdk {
-        version = release(sdk)
-    }
+    compileSdk = sdk
 
     defaultConfig {
         applicationId = "com.jmdev.app.imagify"
@@ -41,10 +39,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
     compileOptions {
         sourceCompatibility = jVersion
         targetCompatibility = jVersion
     }
+
     buildFeatures {
         compose = true
     }
@@ -57,9 +57,11 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.koin)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
@@ -73,7 +75,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
     implementation(libs.kotlinx.serialization.json)
-    
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
