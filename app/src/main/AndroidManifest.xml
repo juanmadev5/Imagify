@@ -17,7 +17,6 @@
         android:roundIcon="@mipmap/ic_imagify_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Imagify"
-        tools:targetApi="tiramisu"
         android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".presentation.activity.MainActivity"
