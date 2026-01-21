@@ -1,7 +1,6 @@
 [versions]
 agp = "9.0.0"
 coilCompose = "2.7.0"
-coreSplashscreen = "1.2.0"
 datastorePreferences = "1.2.0"
 firebaseBom = "34.8.0"
 kotlin = "2.3.0"
@@ -29,7 +28,6 @@ nav3 = "1.1.0-alpha02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }

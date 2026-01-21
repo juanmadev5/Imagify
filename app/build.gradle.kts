@@ -21,7 +21,7 @@ configure<ApplicationExtension> {
         minSdk = 33
         targetSdk = sdk
         versionCode = 1
-        versionName = "1.5.0"
+        versionName = "1.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.koin)
-    implementation(libs.androidx.core.splashscreen)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)

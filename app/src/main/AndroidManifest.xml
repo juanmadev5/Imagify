@@ -16,12 +16,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_imagify_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Imagify"
+        android:theme="@style/Theme.AppCompat"
         android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".presentation.activity.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Imagify"
+            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
