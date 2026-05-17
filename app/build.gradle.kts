@@ -18,7 +18,7 @@ configure<ApplicationExtension> {
 
     defaultConfig {
         applicationId = "com.jmdev.app.imagify"
-        minSdk = 33
+        minSdk = 28
         targetSdk = sdk
         versionCode = 1
         versionName = "1.6.0"
