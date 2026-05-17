@@ -18,7 +18,7 @@ configure<ApplicationExtension> {
 
     defaultConfig {
         applicationId = "com.jmdev.app.imagify"
-        minSdk = 28
+        minSdk = 24
         targetSdk = sdk
         versionCode = 1
         versionName = "1.6.0"
@@ -32,6 +32,7 @@ configure<ApplicationExtension> {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
