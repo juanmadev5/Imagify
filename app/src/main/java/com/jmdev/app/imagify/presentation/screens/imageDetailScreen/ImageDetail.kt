@@ -56,12 +56,11 @@ fun ImageDetail(
 ) {
     val context: Context = LocalContext.current
 
-    var loading by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(true) }
 
     val imageDetailViewModel: ImageDetailViewModel = koinViewModel()
 
     LaunchedEffect(Unit) {
-        loading = true
         imageDetailViewModel.getPhoto(photoId)
         loading = false
     }
