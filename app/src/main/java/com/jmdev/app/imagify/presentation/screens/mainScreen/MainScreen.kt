@@ -1,22 +1,45 @@
 package com.jmdev.app.imagify.presentation.screens.mainScreen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.HomeTopBar
 import com.jmdev.app.imagify.presentation.components.NavigationBar
-import com.jmdev.app.imagify.presentation.components.SearchTextField
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,67 +48,76 @@ fun MainScreen(
     navigateToSettings: () -> Unit,
     navigateToDetail: (String, String) -> Unit,
 ) {
+    val viewModel: MainScreenViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+
     val searchLazyState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val navBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
-    val state = rememberSaveable { mutableStateOf(false) }
-    val navIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val navIndex = rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
         modifier = modifier
             .fillMaxSize()
             .safeDrawingPadding()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .nestedScroll(navBarScrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (navIndex.intValue == 0) {
                 HomeTopBar(
-                    navigateToSettings = { navigateToSettings() },
-                    scrollBehavior = scrollBehavior
-                )
-            } else {
-                SearchTextField(
-                    state = state,
-                    searchLazyState = searchLazyState,
+                    navigateToSettings = navigateToSettings,
+                    scrollBehavior = scrollBehavior,
                 )
             }
         },
         bottomBar = {
-            NavigationBar(
-                navIndex = navIndex,
-                scrollBehavior = navBarScrollBehavior
-            )
+            NavigationBar(navIndex = navIndex)
         }
-    ) {
-        Crossfade(targetState = navIndex.intValue) { currentScreen ->
-            when (currentScreen) {
-                0 -> {
-                    Home(
-                        navigateToDetail = { photoId, url ->
-                            navigateToDetail(
-                                photoId,
-                                url
-                            )
-                        },
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            Crossfade(targetState = navIndex.intValue) { currentScreen ->
+                when (currentScreen) {
+                    0 -> Home(
+                        navigateToDetail = navigateToDetail,
                         modifier = modifier,
-                        scaffoldPaddingValues = it
+                        scaffoldPaddingValues = innerPadding
+                    )
+                    1 -> Search(
+                        scaffoldPaddingValues = innerPadding,
+                        navigateToDetail = navigateToDetail,
+                        searchPhotosLazyState = searchLazyState,
                     )
                 }
-
-                1 -> {
-                    Search(
-                        scaffoldPaddingValues = it,
-                        navigateToDetail = { photoId, url ->
-                            navigateToDetail(
-                                photoId,
-                                url
-                            )
-                        },
-                        searchPhotosLazyState = searchLazyState,
-                        state = state
-                    )
+            }
+            AnimatedVisibility(
+                visible = !isOnline,
+                modifier = Modifier.align(Alignment.TopCenter),
+                enter = slideInVertically { -it } + fadeIn(),
+                exit = slideOutVertically { -it } + fadeOut(),
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.WifiOff,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.no_internet_connection),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                        )
+                    }
                 }
             }
         }

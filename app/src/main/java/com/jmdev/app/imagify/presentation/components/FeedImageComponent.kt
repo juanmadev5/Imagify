@@ -1,88 +1,75 @@
 package com.jmdev.app.imagify.presentation.components
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.SubcomposeAsyncImage
+import coil.compose.AsyncImage
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.photo.FeedPhoto
-import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
 import com.jmdev.app.imagify.utils.BlurHashDecoder
 import com.jmdev.app.imagify.utils.PhotoQuality
-import com.jmdev.app.imagify.utils.coilImageBuilder
+import com.jmdev.app.imagify.utils.buildImageRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FeedImageComponent(
     modifier: Modifier = Modifier,
     data: FeedPhoto,
-    navToDetail: (String) -> Unit = {}
+    photoQuality: PhotoQuality,
+    navToDetail: (String) -> Unit = {},
 ) {
-    val viewModel: MainScreenViewModel = koinViewModel()
-    val quality by viewModel.photoQuality.collectAsStateWithLifecycle()
-    val photoUrl = when (quality) {
+    val photoUrl = when (photoQuality) {
         PhotoQuality.RAW -> data.urls.raw
         PhotoQuality.FULL -> data.urls.full
         PhotoQuality.REGULAR -> data.urls.regular
     }
 
     val imageRatio = data.width?.toFloat()?.div(data.height ?: 1) ?: (800f / 600f)
-
     val placeholderSize = 64
     val placeholderHeight = (placeholderSize / imageRatio).toInt()
 
-    val placeHolderBitmap by produceState<Bitmap?>(initialValue = null) {
+    val colorPlaceholder = remember(data.color) {
+        data.color?.let { runCatching { ColorPainter(Color(android.graphics.Color.parseColor(it))) }.getOrNull() }
+    }
+
+    val blurHashBitmap by produceState<Bitmap?>(initialValue = null, data.blurHash) {
         value = withContext(Dispatchers.IO) {
-            BlurHashDecoder.decode(
-                blurHash = data.blurHash,
-                width = placeholderSize,
-                height = placeholderHeight
-            )
+            BlurHashDecoder.decode(data.blurHash, placeholderSize, placeholderHeight)
         }
     }
 
-    SubcomposeAsyncImage(
-        model = coilImageBuilder(
-            data = photoUrl,
-            cacheKey = photoUrl
-        ),
-        contentScale = ContentScale.Fit,
+    val placeholder = remember(blurHashBitmap) {
+        blurHashBitmap?.let { BitmapPainter(it.asImageBitmap()) } ?: colorPlaceholder
+    }
+
+    val context = LocalContext.current
+    val request = remember(photoUrl) { buildImageRequest(context, photoUrl, photoUrl) }
+
+    AsyncImage(
+        model = request,
         contentDescription = data.description,
+        contentScale = ContentScale.Fit,
+        placeholder = placeholder,
         modifier = modifier
             .padding(top = dimensionResource(id = R.dimen.padding_normal))
             .aspectRatio(imageRatio)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
-            .clickable {
-                navToDetail(photoUrl)
-            },
-        loading = {
-            placeHolderBitmap?.let { bitmap ->
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
-                )
-            } ?: Box(
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_normal))
-                    .aspectRatio(imageRatio)
-            )
-        }
+            .clickable { navToDetail(photoUrl) },
     )
 }

@@ -1,18 +1,13 @@
 package com.jmdev.app.imagify.utils
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import android.content.Context
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.jmdev.app.imagify.CROSSFADE_VALUE
-import kotlinx.coroutines.Dispatchers
 
-@Composable
-fun coilImageBuilder(data: String, cacheKey: String): ImageRequest {
-    return ImageRequest.Builder(LocalContext.current)
+fun buildImageRequest(context: Context, data: String, cacheKey: String): ImageRequest =
+    ImageRequest.Builder(context)
         .data(data)
-        .decoderDispatcher(Dispatchers.IO)
-        .crossfade(true)
         .crossfade(CROSSFADE_VALUE)
         .networkCachePolicy(CachePolicy.ENABLED)
         .diskCachePolicy(CachePolicy.ENABLED)
@@ -20,4 +15,3 @@ fun coilImageBuilder(data: String, cacheKey: String): ImageRequest {
         .memoryCacheKey(cacheKey)
         .diskCacheKey(cacheKey)
         .build()
-}

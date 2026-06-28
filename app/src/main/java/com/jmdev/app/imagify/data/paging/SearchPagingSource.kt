@@ -1,12 +1,14 @@
-package com.jmdev.app.imagify.presentation.paging
+package com.jmdev.app.imagify.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.jmdev.app.imagify.data.PhotoRepository
+import com.jmdev.app.imagify.data.remote.UnsplashAPI
 import com.jmdev.app.imagify.model.photo.FeedPhoto
 
-class HomePagingSource(
-    private val photoRepository: PhotoRepository,
+class SearchPagingSource(
+    private val service: UnsplashAPI,
+    private val query: String,
+    private val orientation: String,
 ) : PagingSource<Int, FeedPhoto>() {
 
     override fun getRefreshKey(state: PagingState<Int, FeedPhoto>): Int? {
@@ -19,11 +21,12 @@ class HomePagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FeedPhoto> {
         return try {
             val page = params.key ?: 1
-            val response = photoRepository.getFeedPhotos(page)
+            val response = service.searchPhotos(query, page, orientation)
+            val results = response.body()?.results ?: emptyList()
             LoadResult.Page(
-                data = response,
+                data = results,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (response.isEmpty()) null else page + 1
+                nextKey = if (results.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

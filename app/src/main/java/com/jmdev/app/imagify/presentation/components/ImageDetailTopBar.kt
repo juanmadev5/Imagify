@@ -1,28 +1,20 @@
 package com.jmdev.app.imagify.presentation.components
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.jmdev.app.imagify.R
+import com.jmdev.app.imagify.presentation.theme.topBarColors
 import com.jmdev.app.imagify.utils.shareUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,53 +27,27 @@ fun ImageDetailTopBar(
 ) {
     val context = LocalContext.current
     TopAppBar(
+        modifier = modifier,
         scrollBehavior = scrollBehavior,
         title = {
-            Text(
-                text = stringResource(R.string.photo_detail),
-                fontSize = dimensionResource(id = R.dimen.title).value.sp,
-                fontWeight = FontWeight(900),
-                fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Text(text = stringResource(R.string.photo_detail))
         },
-        modifier = modifier.statusBarsPadding(),
-        colors = TopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            scrolledContainerColor = MaterialTheme.colorScheme.background,
-            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
-            actionIconContentColor = MaterialTheme.colorScheme.primary,
-            subtitleContentColor = MaterialTheme.colorScheme.onBackground
-        ),
+        colors = topBarColors(),
         navigationIcon = {
-            IconButton(
-                onClick = { navigateToHome() }, modifier = modifier
-                    .statusBarsPadding()
-                    .padding(dimensionResource(id = R.dimen.padding_normal))
-                    .size(dimensionResource(id = R.dimen.img_detail_arrow_back_size))
-            ) {
+            IconButton(onClick = navigateToHome) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.go_back_),
-                    tint = MaterialTheme.colorScheme.primary
+                    contentDescription = stringResource(R.string.go_back_),
                 )
             }
         },
         actions = {
-            IconButton(
-                onClick = {
-                    shareUrl(context, url)
-                }
-            ) {
+            IconButton(onClick = { shareUrl(context, url) }) {
                 Icon(
                     imageVector = Icons.Filled.Share,
-                    contentDescription = stringResource(
-                        R.string.download
-                    ),
-                    tint = MaterialTheme.colorScheme.primary
+                    contentDescription = stringResource(R.string.share_photo),
                 )
             }
-        }
+        },
     )
 }

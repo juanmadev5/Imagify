@@ -1,23 +1,18 @@
 package com.jmdev.app.imagify.presentation.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.jmdev.app.imagify.model.photo.FeedPhoto
+import com.jmdev.app.imagify.utils.PhotoQuality
 
 @Composable
 fun PhotoCard(
     feedPhoto: FeedPhoto,
+    photoQuality: PhotoQuality,
     navigateToDetail: (String, String) -> Unit,
 ) {
     FeedImageComponent(
-        modifier = Modifier
-            .clickable {
-
-            },
         data = feedPhoto,
-        navToDetail = { url ->
-            navigateToDetail(feedPhoto.id, url)
-        }
+        photoQuality = photoQuality,
+        navToDetail = { url -> navigateToDetail(feedPhoto.id, url) }
     )
 }

@@ -1,98 +1,101 @@
 package com.jmdev.app.imagify.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
-import com.jmdev.app.imagify.presentation.screens.mainScreen.MainScreenViewModel
-import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTextField(
     modifier: Modifier = Modifier,
-    state: MutableState<Boolean>,
-    searchLazyState: LazyListState,
+    searchQuery: String,
+    onQueryCommit: (String) -> Unit,
 ) {
-    val mainScreenViewModel: MainScreenViewModel = koinViewModel()
-    val scope = rememberCoroutineScope()
-
-    val query = rememberSaveable {
-        mutableStateOf(mainScreenViewModel.searchQuery.value)
-    }
-    val nQuery = rememberSaveable {
-        mutableStateOf("")
-    }
-
-    fun queryController(q: String) {
-        if (query.value != q) {
-            query.value = q
-            mainScreenViewModel.queryPhotos(q)
-            state.value = true
-        }
-    }
-
+    var inputText by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     TextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        value = nQuery.value,
-        onValueChange = {
-            nQuery.value = it
-        },
-        maxLines = 1,
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        value = inputText,
+        onValueChange = { inputText = it },
+        singleLine = true,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Filled.Search,
-                contentDescription = stringResource(id = R.string.search)
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        },
+        trailingIcon = {
+            AnimatedVisibility(
+                visible = inputText.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                IconButton(onClick = { inputText = "" }) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
         },
         placeholder = {
             Text(
-                text = stringResource(
-                    R.string.search_placeHolder,
-                    mainScreenViewModel.searchQuery.collectAsStateWithLifecycle().value
-                )
+                text = if (searchQuery.isNotEmpty())
+                    stringResource(R.string.search_placeHolder, searchQuery)
+                else
+                    stringResource(R.string.search),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyLarge,
             )
         },
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)),
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
+        textStyle = MaterialTheme.typography.bodyLarge,
+        shape = RoundedCornerShape(16.dp),
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
         ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
-            if (query.value.isNotBlank()) {
-                queryController(nQuery.value)
+            if (inputText.isNotBlank() && inputText != searchQuery) {
+                onQueryCommit(inputText)
             }
-            scope.launch {
-                searchLazyState.animateScrollToItem(0)
-            }
-        }
+        },
     )
 }

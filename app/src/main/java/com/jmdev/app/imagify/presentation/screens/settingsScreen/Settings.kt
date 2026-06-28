@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -40,38 +41,20 @@ fun Settings(
     modifier: Modifier = Modifier,
     navigateToHome: () -> Unit,
 ) {
-    val settingsViewModel: SettingsViewModel = koinViewModel()
-    val photoQuality by settingsViewModel.photoQuality.collectAsStateWithLifecycle()
-    val photoOrientation by settingsViewModel.searchPhotoOrientation.collectAsStateWithLifecycle()
+    val viewModel: SettingsViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val configuration = LocalConfiguration.current
 
     val qualityList = listOf(
-        QualityModel(
-            quality = R.string.raw,
-            qualityToApply = PhotoQuality.RAW
-        ),
-        QualityModel(
-            quality = R.string.full,
-            qualityToApply = PhotoQuality.FULL
-        ),
-        QualityModel(
-            quality = R.string.regular,
-            qualityToApply = PhotoQuality.REGULAR
-        )
+        QualityModel(quality = R.string.raw, qualityToApply = PhotoQuality.RAW),
+        QualityModel(quality = R.string.full, qualityToApply = PhotoQuality.FULL),
+        QualityModel(quality = R.string.regular, qualityToApply = PhotoQuality.REGULAR)
     )
 
     val orientationList = listOf(
-        OrientationModel(
-            orientation = R.string.orientation_portrait,
-            orientationToApply = ORIENTATION_PORTRAIT
-        ),
-        OrientationModel(
-            orientation = R.string.orientation_landscape,
-            orientationToApply = ORIENTATION_LANDSCAPE
-        ),
-        OrientationModel(
-            orientation = R.string.orientation_squarish,
-            orientationToApply = ORIENTATION_SQUARISH
-        )
+        OrientationModel(orientation = R.string.orientation_portrait, orientationToApply = ORIENTATION_PORTRAIT),
+        OrientationModel(orientation = R.string.orientation_landscape, orientationToApply = ORIENTATION_LANDSCAPE),
+        OrientationModel(orientation = R.string.orientation_squarish, orientationToApply = ORIENTATION_SQUARISH)
     )
 
     Column(
@@ -84,11 +67,10 @@ fun Settings(
             modifier = modifier
                 .padding(dimensionResource(id = R.dimen.padding_normal))
                 .fillMaxWidth()
-                .wrapContentHeight(), verticalAlignment = Alignment.CenterVertically
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { navigateToHome() }
-            ) {
+            IconButton(onClick = navigateToHome) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.go_back_),
@@ -103,6 +85,7 @@ fun Settings(
                 color = MaterialTheme.colorScheme.primary
             )
         }
+
         Text(
             text = stringResource(R.string.photo_quality),
             modifier = modifier.padding(
@@ -117,10 +100,10 @@ fun Settings(
         qualityList.forEach { quality ->
             SelectorComponent(
                 item = quality.quality,
-                checked = photoQuality == quality.qualityToApply,
+                checked = uiState.photoQuality == quality.qualityToApply,
                 enabled = true
             ) {
-                settingsViewModel.setQuality(quality = quality.qualityToApply)
+                viewModel.onEvent(SettingsUiEvent.SetQuality(quality.qualityToApply))
             }
         }
 
@@ -138,10 +121,10 @@ fun Settings(
         orientationList.forEach { orientation ->
             SelectorComponent(
                 item = orientation.orientation,
-                checked = photoOrientation == orientation.orientationToApply,
+                checked = uiState.searchPhotoOrientation == orientation.orientationToApply,
                 enabled = true
             ) {
-                settingsViewModel.setSearchOrientation(orientation = orientation.orientationToApply)
+                viewModel.onEvent(SettingsUiEvent.SetOrientation(orientation.orientationToApply))
             }
         }
     }

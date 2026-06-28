@@ -8,29 +8,18 @@ import kotlin.math.withSign
 
 object BlurHashDecoder {
 
-    // cache Math.cos() calculations to improve performance.
-    // The number of calculations can be huge for many bitmaps: width * height * numCompX * numCompY * 2 * nBitmaps
-    // the cache is enabled by default, it is recommended to disable it only when just a few images are displayed
     private val cacheCosinesX = HashMap<Int, DoubleArray>()
     private val cacheCosinesY = HashMap<Int, DoubleArray>()
 
-    /**
-     * Clear calculations stored in memory cache.
-     * The cache is not big, but will increase when many image sizes are used,
-     * if the app needs memory it is recommended to clear it.
-     */
+    private const val BITMAP_CACHE_MAX = 150
+    private val bitmapCache = LinkedHashMap<String, Bitmap>(BITMAP_CACHE_MAX, 0.75f, true)
+
     fun clearCache() {
         cacheCosinesX.clear()
         cacheCosinesY.clear()
+        bitmapCache.clear()
     }
 
-    /**
-     * Decode a blur hash into a new bitmap.
-     *
-     * @param useCache use in memory cache for the calculated math, reused by images with same size.
-     *                 if the cache does not exist yet it will be created and populated with new calculations.
-     *                 By default it is true.
-     */
     fun decode(
         blurHash: String?,
         width: Int,
@@ -41,6 +30,8 @@ object BlurHashDecoder {
         if (blurHash == null || blurHash.length < 6) {
             return null
         }
+        val cacheKey = "${blurHash}_${width}_${height}"
+        bitmapCache[cacheKey]?.let { return it }
         val numCompEnc = decode83(blurHash, 0, 1)
         val numCompX = (numCompEnc % 9) + 1
         val numCompY = (numCompEnc / 9) + 1
@@ -59,7 +50,14 @@ object BlurHashDecoder {
                 decodeAc(colorEnc, maxAc * punch)
             }
         }
-        return composeBitmap(width, height, numCompX, numCompY, colors, useCache)
+        return composeBitmap(width, height, numCompX, numCompY, colors, useCache).also { bitmap ->
+            if (useCache) {
+                if (bitmapCache.size >= BITMAP_CACHE_MAX) {
+                    bitmapCache.entries.firstOrNull()?.let { bitmapCache.remove(it.key) }
+                }
+                bitmapCache[cacheKey] = bitmap
+            }
+        }
     }
 
     private fun decode83(str: String, from: Int = 0, to: Int = str.length): Int {

@@ -1,44 +1,67 @@
 package com.jmdev.app.imagify.presentation.screens.imageDetailScreen
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jmdev.app.imagify.data.PhotoRepository
-import com.jmdev.app.imagify.model.photo.User
-import com.jmdev.app.imagify.model.unsplashphoto.Photo
-import com.jmdev.app.imagify.utils.PhotoDownloadManager
+import com.jmdev.app.imagify.domain.usecase.DownloadPhotoUseCase
+import com.jmdev.app.imagify.domain.usecase.GetPhotoUseCase
+import com.jmdev.app.imagify.domain.usecase.GetUserProfileUseCase
+import com.jmdev.app.imagify.utils.ConnectivityObserver
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+
+enum class DownloadStatus { IDLE, LOADING, SUCCESS, ERROR }
 
 class ImageDetailViewModel(
-    private val photoRepository: PhotoRepository,
-    private val downloadManager: PhotoDownloadManager,
+    private val getPhotoUseCase: GetPhotoUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val downloadPhotoUseCase: DownloadPhotoUseCase,
+    private val connectivityObserver: ConnectivityObserver,
 ) : ViewModel() {
 
-    val userProfile = MutableStateFlow<User?>(null)
+    private val _uiState = MutableStateFlow<ImageDetailUiState>(ImageDetailUiState.Loading)
+    val uiState: StateFlow<ImageDetailUiState> = _uiState.asStateFlow()
 
-    private val _photo = MutableStateFlow<Photo?>(null)
-    val photo: StateFlow<Photo?> = _photo
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(50), null)
+    private val _downloadStatus = MutableStateFlow(DownloadStatus.IDLE)
+    val downloadStatus: StateFlow<DownloadStatus> = _downloadStatus.asStateFlow()
 
-    fun getPhoto(id: String) {
-        viewModelScope.launch {
-            _photo.value = photoRepository.getPhoto(id)
+    private var loadJob: kotlinx.coroutines.Job? = null
+
+    fun loadPhoto(photoId: String) {
+        loadJob?.cancel()
+        _uiState.value = ImageDetailUiState.Loading
+        loadJob = viewModelScope.launch {
+            try {
+                val photo = getPhotoUseCase(photoId)
+                if (photo == null) {
+                    _uiState.value = ImageDetailUiState.Error(isNetworkError = !connectivityObserver.isOnline.value)
+                    return@launch
+                }
+                val userProfile = runCatching { getUserProfileUseCase(photo.user.username) }.getOrNull()
+                _uiState.value = ImageDetailUiState.Success(photo, userProfile)
+            } catch (e: IOException) {
+                _uiState.value = ImageDetailUiState.Error(isNetworkError = true)
+            } catch (e: Exception) {
+                _uiState.value = ImageDetailUiState.Error(isNetworkError = false)
+            }
         }
     }
 
-    fun downloadPhoto(context: Context, link: String, fileName: String) {
-        viewModelScope.launch {
-            downloadManager.downloadPhoto(context, link, fileName)
-        }
-    }
-
-    fun getUserProfile(username: String) {
-        viewModelScope.launch {
-            userProfile.value = photoRepository.getUserProfile(username)
+    fun onEvent(event: ImageDetailUiEvent) {
+        when (event) {
+            is ImageDetailUiEvent.DownloadPhoto -> {
+                if (_downloadStatus.value == DownloadStatus.LOADING) return
+                viewModelScope.launch {
+                    _downloadStatus.value = DownloadStatus.LOADING
+                    val success = downloadPhotoUseCase(event.context, event.link, event.fileName)
+                    _downloadStatus.value = if (success) DownloadStatus.SUCCESS else DownloadStatus.ERROR
+                    delay(2000)
+                    _downloadStatus.value = DownloadStatus.IDLE
+                }
+            }
         }
     }
 }

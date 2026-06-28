@@ -31,7 +31,7 @@ fun NavigationController() {
     }
 
     val settingsViewModel: SettingsViewModel = koinViewModel()
-    val photoQuality by settingsViewModel.photoQuality.collectAsState()
+    val uiState by settingsViewModel.uiState.collectAsState()
 
     ImagifyTheme {
         Surface(
@@ -58,7 +58,7 @@ fun NavigationController() {
                         ImageDetail(
                             navigateToHome = { goBack() },
                             photoId = key.id,
-                            quality = photoQuality
+                            quality = uiState.photoQuality
                         )
                     }
                     entry<Settings> {
@@ -71,20 +71,20 @@ fun NavigationController() {
                 },
                 transitionSpec = {
                     ContentTransform(
-                        slideInHorizontally() + fadeIn(),
-                        slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut()
+                        slideInHorizontally { it } + fadeIn(),
+                        slideOutHorizontally { -it / 3 } + fadeOut()
                     )
                 },
                 popTransitionSpec = {
                     ContentTransform(
-                        slideInHorizontally() + fadeIn(),
-                        slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut()
+                        slideInHorizontally { -it } + fadeIn(),
+                        slideOutHorizontally { it } + fadeOut()
                     )
                 },
                 predictivePopTransitionSpec = {
                     ContentTransform(
-                        slideInHorizontally() + fadeIn(),
-                        slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut()
+                        slideInHorizontally { -it } + fadeIn(),
+                        slideOutHorizontally { it } + fadeOut()
                     )
                 }
             )

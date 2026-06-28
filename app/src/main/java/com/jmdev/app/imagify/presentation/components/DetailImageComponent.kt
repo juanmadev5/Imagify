@@ -1,24 +1,27 @@
 package com.jmdev.app.imagify.presentation.components
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import coil.compose.SubcomposeAsyncImage
+import coil.compose.AsyncImage
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.unsplashphoto.Photo
 import com.jmdev.app.imagify.utils.BlurHashDecoder
-import com.jmdev.app.imagify.utils.coilImageBuilder
+import com.jmdev.app.imagify.utils.buildImageRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,46 +31,35 @@ fun DetailImageComponent(
     data: Photo,
     url: String,
 ) {
-
-    val imageRatio = data.width.toFloat().div(data.height)
-
+    val imageRatio = data.width.toFloat() / data.height
     val placeholderSize = 64
     val placeholderHeight = (placeholderSize / imageRatio).toInt()
 
-    val placeHolderBitmap by produceState<Bitmap?>(initialValue = null) {
+    val colorPlaceholder = remember(data.color) {
+        runCatching { ColorPainter(Color(android.graphics.Color.parseColor(data.color))) }.getOrNull()
+    }
+
+    val blurHashBitmap by produceState<Bitmap?>(initialValue = null, data.blurHash) {
         value = withContext(Dispatchers.IO) {
-            BlurHashDecoder.decode(
-                blurHash = data.blurHash,
-                width = placeholderSize,
-                height = placeholderHeight
-            )
+            BlurHashDecoder.decode(data.blurHash, placeholderSize, placeholderHeight)
         }
     }
 
-    SubcomposeAsyncImage(
-        model = coilImageBuilder(
-            data = url,
-            cacheKey = url
-        ),
-        contentScale = ContentScale.Fit,
+    val placeholder = remember(blurHashBitmap) {
+        blurHashBitmap?.let { BitmapPainter(it.asImageBitmap()) } ?: colorPlaceholder
+    }
+
+    val context = LocalContext.current
+    val request = remember(url) { buildImageRequest(context, url, url) }
+
+    AsyncImage(
+        model = request,
         contentDescription = data.description,
+        contentScale = ContentScale.Fit,
+        placeholder = placeholder,
         modifier = modifier
             .padding(top = dimensionResource(id = R.dimen.padding_normal))
             .aspectRatio(imageRatio)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip))),
-        loading = {
-            placeHolderBitmap?.let { bitmap ->
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
-                )
-            } ?: Box(
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_normal))
-                    .aspectRatio(imageRatio)
-            )
-        }
     )
 }

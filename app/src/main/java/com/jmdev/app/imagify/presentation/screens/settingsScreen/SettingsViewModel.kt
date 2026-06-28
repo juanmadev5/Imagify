@@ -3,52 +3,43 @@ package com.jmdev.app.imagify.presentation.screens.settingsScreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
-import com.jmdev.app.imagify.DEFAULT_PHOTO_QUALITY
-import com.jmdev.app.imagify.data.UserPreferences
-import com.jmdev.app.imagify.utils.PhotoQuality
-import com.jmdev.app.imagify.utils.updateSetting
+import com.jmdev.app.imagify.domain.usecase.GetUserPreferencesUseCase
+import com.jmdev.app.imagify.domain.usecase.SaveOrientationUseCase
+import com.jmdev.app.imagify.domain.usecase.SaveQualityUseCase
+import com.jmdev.app.imagify.utils.launchIO
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val userPreferences: UserPreferences,
+    private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
+    private val saveQualityUseCase: SaveQualityUseCase,
+    private val saveOrientationUseCase: SaveOrientationUseCase,
 ) : ViewModel() {
 
-    var photoQuality = MutableStateFlow(DEFAULT_PHOTO_QUALITY)
-        private set
-
-    var searchPhotoOrientation = MutableStateFlow(DEFAULT_PHOTO_ORIENTATION)
-        private set
+    private val _uiState = MutableStateFlow(SettingsUiState())
+    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            userPreferences.onReadDataRequest(
-                getPhotoQuality = {
-                    photoQuality.value = it
-                },
-                getSearchOrientation = {
-                    searchPhotoOrientation.value = it
-                }
-            )
+            val (quality, orientation) = getUserPreferencesUseCase()
+            _uiState.update { it.copy(photoQuality = quality, searchPhotoOrientation = orientation) }
         }
     }
 
-    fun setQuality(quality: PhotoQuality) =
-        updateSetting(
-            quality,
-            photoQuality,
-            userPreferences::saveQuality,
-            viewModelScope
-        )
-
-    fun setSearchOrientation(orientation: String) {
-        Log.i("orientation", orientation)
-        updateSetting(
-            orientation,
-            searchPhotoOrientation,
-            userPreferences::saveSearchOrientation,
-            viewModelScope
-        )
+    fun onEvent(event: SettingsUiEvent) {
+        when (event) {
+            is SettingsUiEvent.SetQuality -> {
+                _uiState.update { it.copy(photoQuality = event.quality) }
+                viewModelScope.launchIO { saveQualityUseCase(event.quality) }
+            }
+            is SettingsUiEvent.SetOrientation -> {
+                Log.i("orientation", event.orientation)
+                _uiState.update { it.copy(searchPhotoOrientation = event.orientation) }
+                viewModelScope.launchIO { saveOrientationUseCase(event.orientation) }
+            }
+        }
     }
 }

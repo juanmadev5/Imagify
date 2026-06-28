@@ -1,7 +1,7 @@
 package com.jmdev.app.imagify
 
 import android.app.Application
-import com.jmdev.app.imagify.module.appModule
+import com.jmdev.app.imagify.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

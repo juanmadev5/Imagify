@@ -1,4 +1,4 @@
-package com.jmdev.app.imagify.network
+package com.jmdev.app.imagify.data.remote
 
 import com.jmdev.app.imagify.DEFAULT_PHOTO_ORIENTATION
 import com.jmdev.app.imagify.model.SearchPhotosResult
