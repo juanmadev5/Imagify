@@ -28,7 +28,10 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 2. **Abre el proyecto en Android Studio.**
 3. **Configura tu clave de API de Unsplash:**
 	- Ve a `app/src/main/java/com/jmdev/app/imagify/Constants.kt` y agrega tu API Key en la constante `UNSPLASH_API_KEY`.
-4. **Sincroniza dependencias y ejecuta en tu dispositivo/emulador.**
+4. **Agrega tu `google-services.json` de Firebase:**
+	- Creá un proyecto en [Firebase Console](https://console.firebase.google.com/), registrá la app con el namespace `com.jmdev.app.imagify` y descargá el archivo `google-services.json` generado.
+	- Colocalo en `app/google-services.json` (el archivo no está versionado en el repo).
+5. **Sincroniza dependencias y ejecuta en tu dispositivo/emulador.**
 
 ## Dependencias principales
 
@@ -65,23 +68,30 @@ Imagify/
 ```
 
 ## 🧪 Pruebas y calidad del código
-Imagify incluye pruebas unitarias que validan la configuración base de la aplicación y la integración de dependencias con Koin y Coil.
+Imagify incluye pruebas unitarias que validan la configuración base de la aplicación, la integración de dependencias con Koin y Coil, y la lógica de los casos de uso del dominio.
 
-El archivo principal de tests es:
+Los tests viven en:
 ```
-app/src/test/java/com/jmdev/app/imagify/AppTest.kt
+app/src/test/java/com/jmdev/app/imagify/
+├── AppTest.kt
+├── domain/usecase/
+│   ├── DownloadPhotoUseCaseTest.kt
+│   ├── GetPhotoUseCaseTest.kt
+│   ├── GetUserPreferencesUseCaseTest.kt
+│   ├── GetUserProfileUseCaseTest.kt
+│   ├── SaveOrientationUseCaseTest.kt
+│   └── SaveQualityUseCaseTest.kt
 ```
 Qué se prueba:
 
-- ✅ Verificación de módulos de Koin (appModule.verify())
+- ✅ Verificación de módulos de Koin (`appModule.verify()`)
+- ✅ Políticas de caché (memoria, disco, red) de las requests de imágenes armadas con `buildImageRequest`
+- ✅ Casos de uso del dominio (`GetPhotoUseCase`, `GetUserProfileUseCase`, `GetUserPreferencesUseCase`, `SaveOrientationUseCase`, `SaveQualityUseCase`, `DownloadPhotoUseCase`), mockeando los repositorios con Mockito
 
-- ✅ Configuración correcta del ImageLoader de Coil
-
-	- Políticas de caché de memoria y disco habilitadas
-
-	- Existencia de cachés en memoria y disco
-
-- ✅ Correcta inicialización del entorno de test con Dispatchers.setMain
+Para correrlos:
+```sh
+./gradlew testDebugUnitTest
+```
 
 ## Créditos y agradecimientos
 
