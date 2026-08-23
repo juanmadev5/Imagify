@@ -68,7 +68,7 @@ Imagify/
 ```
 
 ## 🧪 Pruebas y calidad del código
-Imagify incluye pruebas unitarias que validan la configuración base de la aplicación, la integración de dependencias con Koin y Coil, y la lógica de los casos de uso del dominio.
+Imagify incluye pruebas unitarias que validan la configuración base de la aplicación, la integración de dependencias con Koin y Coil, la lógica de los casos de uso del dominio, y el comportamiento de los `StateFlow` expuestos por los ViewModels.
 
 Los tests viven en:
 ```
@@ -81,17 +81,29 @@ app/src/test/java/com/jmdev/app/imagify/
 │   ├── GetUserProfileUseCaseTest.kt
 │   ├── SaveOrientationUseCaseTest.kt
 │   └── SaveQualityUseCaseTest.kt
+├── presentation/screens/
+│   ├── imageDetailScreen/ImageDetailViewModelTest.kt
+│   ├── mainScreen/MainScreenViewModelTest.kt
+│   └── settingsScreen/SettingsViewModelTest.kt
 ```
 Qué se prueba:
 
 - ✅ Verificación de módulos de Koin (`appModule.verify()`)
 - ✅ Políticas de caché (memoria, disco, red) de las requests de imágenes armadas con `buildImageRequest`
 - ✅ Casos de uso del dominio (`GetPhotoUseCase`, `GetUserProfileUseCase`, `GetUserPreferencesUseCase`, `SaveOrientationUseCase`, `SaveQualityUseCase`, `DownloadPhotoUseCase`), mockeando los repositorios con Mockito
+- ✅ Los `StateFlow` de `MainScreenViewModel`, `ImageDetailViewModel` y `SettingsViewModel` (carga de preferencias, eventos de UI, estados de descarga), usando [Turbine](https://github.com/cashapp/turbine)
 
 Para correrlos:
 ```sh
 ./gradlew testDebugUnitTest
 ```
+
+Análisis estático (debe pasar limpio antes de dar por terminado un cambio):
+```sh
+./gradlew lint
+./gradlew detekt
+```
+`detekt` usa un baseline (`app/config/detekt/baseline.xml`) para no re-señalar deuda de estilo preexistente; un cambio nuevo debe seguir pasando sin agregar hallazgos.
 
 ## Créditos y agradecimientos
 
