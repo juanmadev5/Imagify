@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Context imports
+
+@/home/juanma/dev-context-system/01-mobile/jetpack-compose/INDEX.md
+@/home/juanma/dev-context-system/00-global/git-conventions.md
+
 ## Project
 
 Imagify is a native Android app (Kotlin, Jetpack Compose) for browsing, searching, and downloading photos from the Unsplash API. Single Gradle module (`:app`), package `com.jmdev.app.imagify`.
