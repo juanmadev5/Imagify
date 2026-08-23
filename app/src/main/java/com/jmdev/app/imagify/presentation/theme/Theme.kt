@@ -19,7 +19,8 @@ fun topBarColors() = TopAppBarColors(
     containerColor = MaterialTheme.colorScheme.background,
     actionIconContentColor = MaterialTheme.colorScheme.primary,
     navigationIconContentColor = MaterialTheme.colorScheme.primary,
-    titleContentColor = MaterialTheme.colorScheme.onSurface
+    titleContentColor = MaterialTheme.colorScheme.onSurface,
+    subtitleContentColor = MaterialTheme.colorScheme.onSurface,
 )
 
 private val lightScheme = lightColorScheme(

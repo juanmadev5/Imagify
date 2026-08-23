@@ -42,7 +42,7 @@ fun HomeTopBar(
                 )
             }
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             scrolledContainerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.onBackground,
