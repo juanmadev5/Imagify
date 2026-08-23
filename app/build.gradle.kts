@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.crashlitics)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.perf)
+    alias(libs.plugins.detekt)
 }
 
 configure<ApplicationExtension> {
@@ -48,6 +50,7 @@ configure<ApplicationExtension> {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -55,6 +58,13 @@ configure<ApplicationExtension> {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+configure<DetektExtension> {
+    buildUponDefaultConfig = true
+    autoCorrect = false
+    config.setFrom(files("$projectDir/config/detekt/detekt.yml"))
+    baseline = file("$projectDir/config/detekt/baseline.xml")
 }
 
 dependencies {
@@ -75,6 +85,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.timber)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -85,12 +96,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.adaptive)
     implementation(libs.material.icons.extended)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

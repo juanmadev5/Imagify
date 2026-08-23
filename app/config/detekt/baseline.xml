@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:ImageDetail.kt$@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class) @Composable fun ImageDetail( modifier: Modifier = Modifier, navigateToHome: () -&gt; Unit, photoId: String, quality: PhotoQuality, )</ID>
+    <ID>LongMethod:Home.kt$@Composable fun Home( navigateToDetail: (String, String) -&gt; Unit, modifier: Modifier, scaffoldPaddingValues: PaddingValues, )</ID>
+    <ID>LongMethod:ImageDetail.kt$@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class) @Composable fun ImageDetail( modifier: Modifier = Modifier, navigateToHome: () -&gt; Unit, photoId: String, quality: PhotoQuality, )</ID>
+    <ID>LongMethod:MainScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun MainScreen( modifier: Modifier = Modifier, navigateToSettings: () -&gt; Unit, navigateToDetail: (String, String) -&gt; Unit, )</ID>
+    <ID>LongMethod:NavigationController.kt$@Composable fun NavigationController()</ID>
+    <ID>LongMethod:Search.kt$@Composable fun Search( modifier: Modifier = Modifier, scaffoldPaddingValues: PaddingValues, navigateToDetail: (String, String) -&gt; Unit, searchPhotosLazyState: LazyStaggeredGridState, )</ID>
+    <ID>LongMethod:SearchTextField.kt$@Composable fun SearchTextField( modifier: Modifier = Modifier, searchQuery: String, onQueryCommit: (String) -&gt; Unit, )</ID>
+    <ID>LongMethod:Settings.kt$@Composable fun Settings( modifier: Modifier = Modifier, navigateToHome: () -&gt; Unit, )</ID>
+    <ID>LongParameterList:BlurHashDecoder.kt$BlurHashDecoder$( width: Int, height: Int, numCompX: Int, numCompY: Int, colors: Array&lt;FloatArray&gt;, useCache: Boolean, )</ID>
+    <ID>MagicNumber:AppModule.kt$1024</ID>
+    <ID>MagicNumber:AppModule.kt$10L</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$0.0031308f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$0.04045f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$0.055f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$0.5f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$0.75f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$1.055f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$12.92f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$16</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$166f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$19</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$2.4f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$255</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$255f</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$4</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$6</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$8</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$83</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$9</ID>
+    <ID>MagicNumber:BlurHashDecoder.kt$BlurHashDecoder$9.0f</ID>
+    <ID>MagicNumber:Color.kt$0xFF000000</ID>
+    <ID>MagicNumber:Color.kt$0xFF003735</ID>
+    <ID>MagicNumber:Color.kt$0xFF0C0F09</ID>
+    <ID>MagicNumber:Color.kt$0xFF12140E</ID>
+    <ID>MagicNumber:Color.kt$0xFF1A1C16</ID>
+    <ID>MagicNumber:Color.kt$0xFF1E201A</ID>
+    <ID>MagicNumber:Color.kt$0xFF1F3701</ID>
+    <ID>MagicNumber:Color.kt$0xFF1F4E4B</ID>
+    <ID>MagicNumber:Color.kt$0xFF282B24</ID>
+    <ID>MagicNumber:Color.kt$0xFF2A331E</ID>
+    <ID>MagicNumber:Color.kt$0xFF2F312A</ID>
+    <ID>MagicNumber:Color.kt$0xFF33362E</ID>
+    <ID>MagicNumber:Color.kt$0xFF354E16</ID>
+    <ID>MagicNumber:Color.kt$0xFF383A32</ID>
+    <ID>MagicNumber:Color.kt$0xFF386663</ID>
+    <ID>MagicNumber:Color.kt$0xFF404A33</ID>
+    <ID>MagicNumber:Color.kt$0xFF44483D</ID>
+    <ID>MagicNumber:Color.kt$0xFF4C662B</ID>
+    <ID>MagicNumber:Color.kt$0xFF586249</ID>
+    <ID>MagicNumber:Color.kt$0xFF690005</ID>
+    <ID>MagicNumber:Color.kt$0xFF75796C</ID>
+    <ID>MagicNumber:Color.kt$0xFF8F9285</ID>
+    <ID>MagicNumber:Color.kt$0xFF93000A</ID>
+    <ID>MagicNumber:Color.kt$0xFFA0D0CB</ID>
+    <ID>MagicNumber:Color.kt$0xFFB1D18A</ID>
+    <ID>MagicNumber:Color.kt$0xFFBA1A1A</ID>
+    <ID>MagicNumber:Color.kt$0xFFBCECE7</ID>
+    <ID>MagicNumber:Color.kt$0xFFBFCBAD</ID>
+    <ID>MagicNumber:Color.kt$0xFFC5C8BA</ID>
+    <ID>MagicNumber:Color.kt$0xFFCDEDA3</ID>
+    <ID>MagicNumber:Color.kt$0xFFDADBD0</ID>
+    <ID>MagicNumber:Color.kt$0xFFDCE7C8</ID>
+    <ID>MagicNumber:Color.kt$0xFFE1E4D5</ID>
+    <ID>MagicNumber:Color.kt$0xFFE2E3D8</ID>
+    <ID>MagicNumber:Color.kt$0xFFE8E9DE</ID>
+    <ID>MagicNumber:Color.kt$0xFFEEEFE3</ID>
+    <ID>MagicNumber:Color.kt$0xFFF1F2E6</ID>
+    <ID>MagicNumber:Color.kt$0xFFF3F4E9</ID>
+    <ID>MagicNumber:Color.kt$0xFFF9FAEF</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFB4AB</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFDAD6</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFFFFF</ID>
+    <ID>MagicNumber:DetailImageComponent.kt$64</ID>
+    <ID>MagicNumber:FeedImageComponent.kt$600f</ID>
+    <ID>MagicNumber:FeedImageComponent.kt$64</ID>
+    <ID>MagicNumber:FeedImageComponent.kt$800f</ID>
+    <ID>MagicNumber:ImageDetail.kt$10</ID>
+    <ID>MagicNumber:ImageDetailViewModel.kt$ImageDetailViewModel$2000</ID>
+    <ID>MagicNumber:NavigationController.kt$3</ID>
+    <ID>MagicNumber:NetworkCacheInterceptor.kt$NetworkCacheInterceptor$5</ID>
+    <ID>MagicNumber:NetworkCacheInterceptor.kt$NetworkCacheInterceptor$60</ID>
+    <ID>MagicNumber:OfflineCacheInterceptor.kt$OfflineCacheInterceptor$24</ID>
+    <ID>MagicNumber:OfflineCacheInterceptor.kt$OfflineCacheInterceptor$60</ID>
+    <ID>MagicNumber:OfflineCacheInterceptor.kt$OfflineCacheInterceptor$7</ID>
+    <ID>MagicNumber:PhotoDownloadManager.kt$PhotoDownloadManager$120</ID>
+    <ID>MagicNumber:PhotoDownloadManager.kt$PhotoDownloadManager$30</ID>
+    <ID>NestedBlockDepth:BlurHashDecoder.kt$BlurHashDecoder$private fun composeBitmap( width: Int, height: Int, numCompX: Int, numCompY: Int, colors: Array&lt;FloatArray&gt;, useCache: Boolean, ): Bitmap</ID>
+    <ID>NewLineAtEndOfFile:BlurHashDecoder.kt$com.jmdev.app.imagify.utils.BlurHashDecoder.kt</ID>
+    <ID>NewLineAtEndOfFile:Collection.kt$com.jmdev.app.imagify.model.unsplashphoto.Collection.kt</ID>
+    <ID>NewLineAtEndOfFile:Constants.kt$com.jmdev.app.imagify.Constants.kt</ID>
+    <ID>NewLineAtEndOfFile:ExampleUnitTest.kt$com.jmdev.app.imagify.ExampleUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:FeedPhoto.kt$com.jmdev.app.imagify.model.photo.FeedPhoto.kt</ID>
+    <ID>NewLineAtEndOfFile:Header.kt$com.jmdev.app.imagify.model.Header.kt</ID>
+    <ID>NewLineAtEndOfFile:LaunchIO.kt$com.jmdev.app.imagify.utils.LaunchIO.kt</ID>
+    <ID>NewLineAtEndOfFile:NavItems.kt$com.jmdev.app.imagify.model.NavItems.kt</ID>
+    <ID>NewLineAtEndOfFile:Photo.kt$com.jmdev.app.imagify.model.unsplashphoto.Photo.kt</ID>
+    <ID>NewLineAtEndOfFile:PhotoQuality.kt$com.jmdev.app.imagify.utils.PhotoQuality.kt</ID>
+    <ID>NewLineAtEndOfFile:Position.kt$com.jmdev.app.imagify.model.unsplashphoto.Position.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileImage.kt$com.jmdev.app.imagify.model.photo.ProfileImage.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchPhotosResult.kt$com.jmdev.app.imagify.model.SearchPhotosResult.kt</ID>
+    <ID>NewLineAtEndOfFile:SelectorComponent.kt$com.jmdev.app.imagify.presentation.components.SelectorComponent.kt</ID>
+    <ID>NewLineAtEndOfFile:ShareURL.kt$com.jmdev.app.imagify.utils.ShareURL.kt</ID>
+    <ID>NewLineAtEndOfFile:Tag.kt$com.jmdev.app.imagify.model.unsplashphoto.Tag.kt</ID>
+    <ID>NewLineAtEndOfFile:Theme.kt$com.jmdev.app.imagify.presentation.theme.Theme.kt</ID>
+    <ID>NewLineAtEndOfFile:Type.kt$com.jmdev.app.imagify.presentation.theme.Type.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateSettings.kt$com.jmdev.app.imagify.utils.UpdateSettings.kt</ID>
+    <ID>NewLineAtEndOfFile:Urls.kt$com.jmdev.app.imagify.model.photo.Urls.kt</ID>
+    <ID>NewLineAtEndOfFile:User.kt$com.jmdev.app.imagify.model.photo.User.kt</ID>
+    <ID>ReturnCount:BlurHashDecoder.kt$BlurHashDecoder$fun decode( blurHash: String?, width: Int, height: Int, punch: Float = 1f, useCache: Boolean = true, ): Bitmap?</ID>
+    <ID>ReturnCount:ConnectivityObserver.kt$ConnectivityObserver$fun isConnected(): Boolean</ID>
+    <ID>SwallowedException:ImageDetailViewModel.kt$ImageDetailViewModel$e: Exception</ID>
+    <ID>SwallowedException:ImageDetailViewModel.kt$ImageDetailViewModel$e: IOException</ID>
+    <ID>SwallowedException:PhotoDownloadManager.kt$PhotoDownloadManager$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:HomePagingSource.kt$HomePagingSource$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ImageDetailViewModel.kt$ImageDetailViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:PhotoDownloadManager.kt$PhotoDownloadManager$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:SearchPagingSource.kt$SearchPagingSource$e: Exception</ID>
+    <ID>TooManyFunctions:BlurHashDecoder.kt$BlurHashDecoder</ID>
+    <ID>WildcardImport:ExampleUnitTest.kt$import org.junit.Assert.*</ID>
+  </CurrentIssues>
+</SmellBaseline>
