@@ -10,7 +10,7 @@ plugins {
 }
 
 configure<ApplicationExtension> {
-    val sdk = 36
+    val sdk = 37
     val jVersion = JavaVersion.VERSION_21
 
     namespace = "com.jmdev.app.imagify"
