@@ -15,9 +15,9 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 
 ## Screenshots
 
-| Pantalla Principal | Búsqueda | Detalle de Imagen |
-|--------------------|----------|-------------------|
-| ![Home](assets/screenshot1.png) | ![Search](assets/screenshot2.png) | ![Detail](assets/screenshot3.png) |
+| Pantalla Principal | Búsqueda | Detalle de Imagen | Datos EXIF |
+|--------------------|----------|--------------------|------------|
+| ![Home](assets/screenshot1.png) | ![Search](assets/screenshot2.png) | ![Detail](assets/screenshot3.png) | ![Camera data](assets/screenshot4.png) |
 
 ## Instalación y ejecución
 
@@ -27,7 +27,7 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 	```
 2. **Abre el proyecto en Android Studio.**
 3. **Configura tu clave de API de Unsplash:**
-	- Ve a `app/src/main/java/com/jmdev/app/imagify/Constants.kt` y agrega tu API Key en la constante `API_KEY`.
+	- Ve a `app/src/main/java/com/jmdev/app/imagify/Constants.kt` y agrega tu API Key en la constante `UNSPLASH_API_KEY`.
 4. **Sincroniza dependencias y ejecuta en tu dispositivo/emulador.**
 
 ## Dependencias principales
@@ -47,13 +47,18 @@ Imagify/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/jmdev/app/imagify/
-│   │   │   │   ├── data/        # Repositorios y lógica de datos
-│   │   │   │   ├── model/       # Modelos de dominio
-│   │   │   │   ├── module/      # Inyección de dependencias
-│   │   │   │   ├── network/     # API y servicios
-│   │   │   │   ├── presentation/# UI y pantallas
-│   │   │   │   ├── utils/       # Utilidades
-│   │   │   ├── res/             # Recursos gráficos y strings
+│   │   │   │   ├── data/
+│   │   │   │   │   ├── paging/      # PagingSource de Home y Búsqueda
+│   │   │   │   │   ├── remote/      # API, interceptores
+│   │   │   │   │   ├── repository/  # Implementación de repositorios
+│   │   │   │   ├── domain/
+│   │   │   │   │   ├── repository/  # Contratos de repositorios
+│   │   │   │   │   ├── usecase/     # Casos de uso
+│   │   │   │   ├── di/              # Inyección de dependencias (Koin)
+│   │   │   │   ├── model/           # Modelos de dominio
+│   │   │   │   ├── presentation/    # UI y pantallas (Compose)
+│   │   │   │   ├── utils/           # Utilidades
+│   │   │   ├── res/                 # Recursos gráficos y strings
 │   ├── build.gradle.kts
 ├── assets/                      # Screenshots
 ├── README.md
