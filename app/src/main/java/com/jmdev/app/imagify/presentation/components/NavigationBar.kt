@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.jmdev.app.imagify.R
 
 @Composable
@@ -33,14 +33,17 @@ fun NavigationBar(modifier: Modifier = Modifier, navIndex: MutableIntState) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp),
+            .padding(bottom = dimensionResource(id = R.dimen.padding_12)),
         contentAlignment = Alignment.Center,
     ) {
         Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(32.dp))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.nav_bar_clip)))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_12),
+                    vertical = dimensionResource(id = R.dimen.padding6),
+                ),
         ) {
             NavItem(
                 label = stringResource(R.string.home),
@@ -67,20 +70,26 @@ private fun NavItem(
 ) {
     Column(
         modifier = Modifier
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.nav_item_clip)))
             .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 8.dp),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.nav_item_padding_horizontal),
+                vertical = dimensionResource(id = R.dimen.padding_normal),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.spacing_extra_small)),
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)))
                 .background(
                     if (selected) MaterialTheme.colorScheme.secondaryContainer
                     else Color.Transparent
                 )
-                .padding(horizontal = 12.dp, vertical = 4.dp),
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_12),
+                    vertical = dimensionResource(id = R.dimen.spacing_extra_small),
+                ),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -88,7 +97,7 @@ private fun NavItem(
                 contentDescription = label,
                 tint = if (selected) MaterialTheme.colorScheme.onSecondaryContainer
                 else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(22.dp),
+                modifier = Modifier.size(dimensionResource(id = R.dimen.nav_item_icon_size)),
             )
         }
         Text(

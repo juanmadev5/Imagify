@@ -16,9 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.jmdev.app.imagify.R
 
 @Composable
@@ -28,7 +28,7 @@ fun NetworkErrorContent(
     onRetry: () -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(32.dp),
+        modifier = modifier.padding(dimensionResource(id = R.dimen.network_error_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -36,9 +36,9 @@ fun NetworkErrorContent(
             imageVector = if (isNetworkError) Icons.Filled.WifiOff else Icons.Filled.Warning,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(dimensionResource(id = R.dimen.network_error_icon_size)),
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(dimensionResource(id = R.dimen.padding_large)))
         Text(
             text = if (isNetworkError)
                 stringResource(R.string.no_internet_connection)
@@ -48,7 +48,7 @@ fun NetworkErrorContent(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(dimensionResource(id = R.dimen.padding_large)))
         Button(onClick = onRetry) {
             Text(stringResource(R.string.retry))
         }

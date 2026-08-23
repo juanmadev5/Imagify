@@ -15,9 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
 import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.size
+import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.model.photo.User
 import com.jmdev.app.imagify.utils.buildImageRequest
 
@@ -40,7 +41,7 @@ fun AuthorComponent(modifier: Modifier = Modifier, data: User?) {
                 error = personIcon,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(dimensionResource(id = R.dimen.author_avatar_size))
                     .clip(CircleShape),
             )
         },

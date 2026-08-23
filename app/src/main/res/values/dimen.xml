@@ -17,4 +17,19 @@
     <dimen name="circular_indicator_size">24dp</dimen>
     <dimen name="navBarWidth">150dp</dimen>
     <dimen name="navBarItemSize">40dp</dimen>
+    <dimen name="author_avatar_size">48dp</dimen>
+    <dimen name="network_error_padding">32dp</dimen>
+    <dimen name="network_error_icon_size">56dp</dimen>
+    <dimen name="nav_bar_clip">32dp</dimen>
+    <dimen name="nav_item_clip">24dp</dimen>
+    <dimen name="nav_item_padding_horizontal">20dp</dimen>
+    <dimen name="nav_item_icon_size">22dp</dimen>
+    <dimen name="spacing_extra_small">4dp</dimen>
+    <dimen name="search_field_padding_vertical">10dp</dimen>
+    <dimen name="search_empty_icon_size">48dp</dimen>
+    <dimen name="offline_banner_icon_size">16dp</dimen>
+    <dimen name="icon_size_small">18dp</dimen>
+    <dimen name="fab_progress_stroke_width">2dp</dimen>
+    <dimen name="detail_content_bottom_padding">88dp</dimen>
+    <dimen name="settings_content_max_width">600dp</dimen>
 </resources>

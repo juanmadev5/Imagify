@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.jmdev.app.imagify.R
 
 @Composable
@@ -44,7 +44,10 @@ fun SearchTextField(
     TextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_large),
+                vertical = dimensionResource(id = R.dimen.search_field_padding_vertical),
+            ),
         value = inputText,
         onValueChange = { inputText = it },
         singleLine = true,
@@ -81,7 +84,7 @@ fun SearchTextField(
             )
         },
         textStyle = MaterialTheme.typography.bodyLarge,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_clip)),
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
