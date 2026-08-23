@@ -1,6 +1,5 @@
 package com.jmdev.app.imagify.presentation.screens.settingsScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jmdev.app.imagify.domain.usecase.GetUserPreferencesUseCase
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SettingsViewModel(
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
@@ -36,7 +36,7 @@ class SettingsViewModel(
                 viewModelScope.launchIO { saveQualityUseCase(event.quality) }
             }
             is SettingsUiEvent.SetOrientation -> {
-                Log.i("orientation", event.orientation)
+                Timber.i("orientation: %s", event.orientation)
                 _uiState.update { it.copy(searchPhotoOrientation = event.orientation) }
                 viewModelScope.launchIO { saveOrientationUseCase(event.orientation) }
             }
