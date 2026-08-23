@@ -1,12 +1,16 @@
 package com.jmdev.app.imagify.presentation.screens.mainScreen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +24,7 @@ import androidx.paging.compose.itemKey
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.NetworkErrorContent
 import com.jmdev.app.imagify.presentation.components.PhotoCard
+import com.jmdev.app.imagify.presentation.utils.photoGridColumnCount
 import org.koin.androidx.compose.koinViewModel
 import java.io.IOException
 
@@ -56,11 +61,14 @@ fun Home(
         }
 
         else -> {
-            LazyColumn(
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(photoGridColumnCount()),
                 modifier = modifier
                     .padding(top = scaffoldPaddingValues.calculateTopPadding())
                     .navigationBarsPadding()
                     .fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_normal)),
+                verticalItemSpacing = dimensionResource(id = R.dimen.padding_normal),
                 userScrollEnabled = true
             ) {
                 items(
@@ -78,8 +86,8 @@ fun Home(
                 homePhotos.apply {
                     when (loadState.append) {
                         is LoadState.Loading -> {
-                            item {
-                                Box(modifier = modifier.fillMaxSize()) {
+                            item(span = StaggeredGridItemSpan.FullLine) {
+                                Box(modifier = modifier.fillMaxWidth()) {
                                     CircularProgressIndicator(
                                         modifier = modifier
                                             .size(dimensionResource(id = R.dimen.circular_indicator_size))
@@ -90,9 +98,9 @@ fun Home(
                         }
                         is LoadState.Error -> {
                             val error = (loadState.append as LoadState.Error).error
-                            item {
+                            item(span = StaggeredGridItemSpan.FullLine) {
                                 NetworkErrorContent(
-                                    modifier = modifier.fillMaxSize(),
+                                    modifier = modifier.fillMaxWidth(),
                                     isNetworkError = error is IOException,
                                     onRetry = { retry() },
                                 )

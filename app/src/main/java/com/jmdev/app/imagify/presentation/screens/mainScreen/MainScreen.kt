@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,8 +33,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jmdev.app.imagify.R
 import com.jmdev.app.imagify.presentation.components.HomeTopBar
@@ -52,7 +52,7 @@ fun MainScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
-    val searchLazyState = rememberLazyListState()
+    val searchLazyState = rememberLazyStaggeredGridState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val navIndex = rememberSaveable { mutableIntStateOf(0) }
 
@@ -101,7 +101,10 @@ fun MainScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .padding(
+                                horizontal = dimensionResource(id = R.dimen.padding_large),
+                                vertical = dimensionResource(id = R.dimen.padding_normal),
+                            ),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -109,9 +112,9 @@ fun MainScreen(
                             imageVector = Icons.Filled.WifiOff,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(dimensionResource(id = R.dimen.offline_banner_icon_size)),
                         )
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(dimensionResource(id = R.dimen.padding_normal)))
                         Text(
                             text = stringResource(R.string.no_internet_connection),
                             style = MaterialTheme.typography.labelMedium,

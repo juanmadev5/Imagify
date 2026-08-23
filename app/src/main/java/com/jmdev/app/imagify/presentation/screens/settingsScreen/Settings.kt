@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -43,7 +43,6 @@ fun Settings(
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val configuration = LocalConfiguration.current
 
     val qualityList = listOf(
         QualityModel(quality = R.string.raw, qualityToApply = PhotoQuality.RAW),
@@ -86,45 +85,52 @@ fun Settings(
             )
         }
 
-        Text(
-            text = stringResource(R.string.photo_quality),
-            modifier = modifier.padding(
-                start = dimensionResource(id = R.dimen.padding_large),
-                end = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_normal),
-                top = dimensionResource(id = R.dimen.padding_large)
-            ),
-            fontSize = dimensionResource(id = R.dimen.settings_items_text_size).value.sp,
-            fontWeight = FontWeight.Bold
-        )
-        qualityList.forEach { quality ->
-            SelectorComponent(
-                item = quality.quality,
-                checked = uiState.photoQuality == quality.qualityToApply,
-                enabled = true
-            ) {
-                viewModel.onEvent(SettingsUiEvent.SetQuality(quality.qualityToApply))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = dimensionResource(id = R.dimen.settings_content_max_width))
+                .align(Alignment.CenterHorizontally),
+        ) {
+            Text(
+                text = stringResource(R.string.photo_quality),
+                modifier = modifier.padding(
+                    start = dimensionResource(id = R.dimen.padding_large),
+                    end = dimensionResource(id = R.dimen.padding_large),
+                    bottom = dimensionResource(id = R.dimen.padding_normal),
+                    top = dimensionResource(id = R.dimen.padding_large)
+                ),
+                fontSize = dimensionResource(id = R.dimen.settings_items_text_size).value.sp,
+                fontWeight = FontWeight.Bold
+            )
+            qualityList.forEach { quality ->
+                SelectorComponent(
+                    item = quality.quality,
+                    checked = uiState.photoQuality == quality.qualityToApply,
+                    enabled = true
+                ) {
+                    viewModel.onEvent(SettingsUiEvent.SetQuality(quality.qualityToApply))
+                }
             }
-        }
 
-        Text(
-            text = stringResource(R.string.photo_orientation_search),
-            modifier = modifier.padding(
-                start = dimensionResource(id = R.dimen.padding_large),
-                end = dimensionResource(id = R.dimen.padding_large),
-                bottom = dimensionResource(id = R.dimen.padding_normal),
-                top = dimensionResource(id = R.dimen.padding_large)
-            ),
-            fontSize = dimensionResource(id = R.dimen.settings_items_text_size).value.sp,
-            fontWeight = FontWeight.Bold
-        )
-        orientationList.forEach { orientation ->
-            SelectorComponent(
-                item = orientation.orientation,
-                checked = uiState.searchPhotoOrientation == orientation.orientationToApply,
-                enabled = true
-            ) {
-                viewModel.onEvent(SettingsUiEvent.SetOrientation(orientation.orientationToApply))
+            Text(
+                text = stringResource(R.string.photo_orientation_search),
+                modifier = modifier.padding(
+                    start = dimensionResource(id = R.dimen.padding_large),
+                    end = dimensionResource(id = R.dimen.padding_large),
+                    bottom = dimensionResource(id = R.dimen.padding_normal),
+                    top = dimensionResource(id = R.dimen.padding_large)
+                ),
+                fontSize = dimensionResource(id = R.dimen.settings_items_text_size).value.sp,
+                fontWeight = FontWeight.Bold
+            )
+            orientationList.forEach { orientation ->
+                SelectorComponent(
+                    item = orientation.orientation,
+                    checked = uiState.searchPhotoOrientation == orientation.orientationToApply,
+                    enabled = true
+                ) {
+                    viewModel.onEvent(SettingsUiEvent.SetOrientation(orientation.orientationToApply))
+                }
             }
         }
     }
