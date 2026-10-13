@@ -1,5 +1,14 @@
 import com.android.build.api.dsl.ApplicationExtension
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) {
+        load(localFile.inputStream())
+    }
+}
+val apiKey = localProperties.getProperty("API_KEY") ?: ""
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -29,6 +38,12 @@ configure<ApplicationExtension> {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"$apiKey\""
+        )
     }
 
     buildTypes {
