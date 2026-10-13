@@ -100,3 +100,5 @@
 }
 # -------------- OKHTTP3
 -dontwarn okhttp3.**
+# -------------- Firebase Performance (protobuf-lite classes reflect field names at runtime)
+-keep class com.google.firebase.perf.v1.** { *; }
