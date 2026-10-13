@@ -13,6 +13,10 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 - 🔗 Detalles completos de cada foto y autor
 - 🛡️ Integración con Firebase Crashlytics, Analytics y Performance
 
+## Descargas
+
+La última versión (v1.7.0) está disponible en [GitHub Releases](https://github.com/juanmadev5/Imagify/releases/latest).
+
 ## Screenshots
 
 | Pantalla Principal | Búsqueda | Detalle de Imagen | Datos EXIF |
@@ -27,7 +31,7 @@ Imagify es una aplicación Android moderna para explorar, buscar y descargar fot
 	```
 2. **Abre el proyecto en Android Studio.**
 3. **Configura tu clave de API de Unsplash:**
-	- Ve a `app/src/main/java/com/jmdev/app/imagify/Constants.kt` y agrega tu API Key en la constante `UNSPLASH_API_KEY`.
+	- Agregá la línea `API_KEY=tu_api_key` a tu `local.properties` (no versionado). Se expone a la app como `BuildConfig.API_KEY`.
 4. **Agrega tu `google-services.json` de Firebase:**
 	- Creá un proyecto en [Firebase Console](https://console.firebase.google.com/), registrá la app con el namespace `com.jmdev.app.imagify` y descargá el archivo `google-services.json` generado.
 	- Colocalo en `app/google-services.json` (el archivo no está versionado en el repo).
