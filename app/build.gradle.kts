@@ -9,6 +9,10 @@ val localProperties = Properties().apply {
     }
 }
 val apiKey = localProperties.getProperty("API_KEY") ?: ""
+val releaseStoreFile = localProperties.getProperty("RELEASE_STORE_FILE")!!
+val releaseStorePassword = localProperties.getProperty("RELEASE_STORE_PASSWORD") ?: ""
+val releaseKeyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS") ?: ""
+val releaseKeyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD") ?: ""
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -31,8 +35,8 @@ configure<ApplicationExtension> {
         applicationId = "com.jmdev.app.imagify"
         minSdk = 24
         targetSdk = sdk
-        versionCode = 1
-        versionName = "1.6.0"
+        versionCode = 2
+        versionName = "1.7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -46,6 +50,15 @@ configure<ApplicationExtension> {
         )
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(releaseStoreFile)
+            storePassword = releaseStorePassword
+            keyAlias = releaseKeyAlias
+            keyPassword = releaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -54,7 +67,7 @@ configure<ApplicationExtension> {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
